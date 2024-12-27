@@ -12,7 +12,7 @@ import (
 	"gonum.org/v1/gonum/stat/combin"
 )
 
-func part1() {
+func buildGraph() (*simpleEditableGraph, map[int]string) {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatalf("Error reading file: %s", err)
@@ -56,11 +56,13 @@ func part1() {
 		g.AddEdge(edge[0], edge[1])
 	}
 
+	return g, reverseComputers
+}
+
+func part1(g *simpleEditableGraph, reverseComputers map[int]string) {
 	cliqueChannel := make(chan []int)
 
 	go graph.AllMaximalCliques(g, cliqueChannel)
-
-	seenCombinations := make(map[string]struct{})
 
 	anyStartsWithT := func(combination []string) bool {
 		for _, v := range combination {
@@ -71,10 +73,15 @@ func part1() {
 		return false
 	}
 
-	num := 0
+	threeCliques := 0
 	k := 3
+
+	seenCombinations := make(map[string]struct{})
+
 	actualCombination := make([]int, k)
 	combinationIndices := make([]int, k)
+	keyParts := make([]string, k)
+
 	for clique := range cliqueChannel {
 		if len(clique) >= 3 {
 			n := len(clique)
@@ -86,7 +93,6 @@ func part1() {
 				}
 
 				sort.Ints(actualCombination)
-				keyParts := make([]string, k)
 				for i, v := range actualCombination {
 					keyParts[i] = reverseComputers[v]
 				}
@@ -99,58 +105,16 @@ func part1() {
 				seenCombinations[key] = struct{}{}
 
 				if anyStartsWithT(keyParts) {
-					num++
+					threeCliques++
 				}
 			}
 		}
 	}
 
-	fmt.Println("ANSWER1:", num)
+	fmt.Println("ANSWER1:", threeCliques)
 }
 
-func part2() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatalf("Error reading file: %s", err)
-	}
-	defer file.Close()
-
-	s := bufio.NewScanner(file)
-
-	computers := make(map[string]int)
-	reverseComputers := make(map[int]string)
-
-	id := 0
-
-	edges := make([][]int, 0)
-
-	for s.Scan() {
-		line := s.Text()
-		var u, v string
-		n, err := fmt.Sscanf(line, "%2s-%2s", &u, &v)
-		if err != nil || n != 2 {
-			log.Fatalf("Error scanning line: %s", line)
-		}
-
-		if _, ok := computers[u]; !ok {
-			computers[u] = id
-			reverseComputers[id] = u
-			id++
-		}
-		if _, ok := computers[v]; !ok {
-			computers[v] = id
-			reverseComputers[id] = v
-			id++
-		}
-		edges = append(edges, []int{computers[u], computers[v]})
-	}
-
-	g := newSimpleEditableGraph(len(computers))
-
-	for _, edge := range edges {
-		g.AddEdge(edge[0], edge[1])
-	}
-
+func part2(g *simpleEditableGraph, reverseComputers map[int]string) {
 	cliqueChannel := make(chan []int)
 
 	go graph.AllMaximalCliques(g, cliqueChannel)
@@ -174,6 +138,7 @@ func part2() {
 }
 
 func main() {
-	part1()
-	part2()
+	g, reverseComputers := buildGraph()
+	part1(g, reverseComputers)
+	part2(g, reverseComputers)
 }
