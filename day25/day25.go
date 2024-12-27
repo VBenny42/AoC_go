@@ -1,7 +1,7 @@
 package main
 
 import (
-	"bufio"
+	"strings"
 	"fmt"
 	"os"
 	"slices"
@@ -22,41 +22,22 @@ func parseSchematic(lines []string) []int {
 }
 
 func part1() {
-	file, err := os.Open("input.txt")
+	data, err := os.ReadFile("input.txt")
 	if err != nil {
 		fmt.Println("Error reading file")
 		return
 	}
-	defer file.Close()
+
+	lines := strings.Split(string(data), "\n")
 
 	var keys [][]int
 	var locks [][]int
 
-	currentBlock := make([]string, 0, 8)
-	blockSize := 8
-	scanner := bufio.NewScanner(file)
-
-	for scanner.Scan() {
-		line := scanner.Text()
-
-		currentBlock = append(currentBlock, line)
-
-		if len(currentBlock) == blockSize {
-			if currentBlock[0] == "#####" {
-				locks = append(locks, parseSchematic(currentBlock))
-			} else {
-				keys = append(keys, parseSchematic(currentBlock))
-			}
-
-			currentBlock = currentBlock[:0]
-		}
-	}
-
-	if len(currentBlock) > 0 {
-		if currentBlock[0] == "#####" {
-			locks = append(locks, parseSchematic(currentBlock))
+	for i := 0; i < len(lines); i = i + 8 {
+		if lines[i] == "#####" {
+			locks = append(locks, parseSchematic(lines[i:i+8]))
 		} else {
-			keys = append(keys, parseSchematic(currentBlock))
+			keys = append(keys, parseSchematic(lines[i:i+8]))
 		}
 	}
 
