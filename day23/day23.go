@@ -111,7 +111,7 @@ func part1(g *simpleEditableGraph, reverseComputers map[int]string) {
 		}
 	}
 
-	fmt.Println("ANSWER1:", threeCliques)
+	fmt.Println("ANSWER1: threeCliques:", threeCliques)
 }
 
 func part2(g *simpleEditableGraph, reverseComputers map[int]string) {

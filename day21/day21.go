@@ -84,11 +84,11 @@ func getShortestSequenceLength(memo map[memoKey]int, numRobots int) int {
 }
 
 func part1(memo map[memoKey]int) {
-	fmt.Println("ANSWER1:", getShortestSequenceLength(memo, 2))
+	fmt.Println("ANSWER1: 2 robots shortestSequenceLength:", getShortestSequenceLength(memo, 2))
 }
 
 func part2(memo map[memoKey]int) {
-	fmt.Println("ANSWER2:", getShortestSequenceLength(memo, 25))
+	fmt.Println("ANSWER2: 25 robots shortestSequenceLength:", getShortestSequenceLength(memo, 25))
 }
 
 func main() {

@@ -66,7 +66,7 @@ func part1() {
 		sumSecretNumbers += n
 	}
 
-	fmt.Println("ANSWER1: ", sumSecretNumbers)
+	fmt.Println("ANSWER1: sumSecretNumbers:", sumSecretNumbers)
 }
 
 func part2() {
@@ -96,7 +96,7 @@ func part2() {
 			maxSequence = v
 		}
 	}
-	println("ANSWER2: ", maxSequence)
+	println("ANSWER2: maxSequence:", maxSequence)
 }
 
 func main() {
