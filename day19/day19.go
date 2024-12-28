@@ -7,14 +7,14 @@ import (
 	"strings"
 )
 
-var dp = make(map[string]int)
+var cache = make(map[string]int)
 
 func differentCombos(towels []string, design string) int {
 	if len(design) == 0 {
 		return 1
 	}
 
-	if val, ok := dp[design]; ok {
+	if val, ok := cache[design]; ok {
 		return val
 	}
 
@@ -23,7 +23,7 @@ func differentCombos(towels []string, design string) int {
 		if len(towel) <= len(design) && design[:len(towel)] == towel {
 			combos := differentCombos(towels, design[len(towel):])
 			count += combos
-			dp[design] = count
+			cache[design] = count
 		}
 	}
 	return count
