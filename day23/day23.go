@@ -59,7 +59,7 @@ func buildGraph() (*simpleEditableGraph, map[int]string) {
 	return g, reverseComputers
 }
 
-func part1(g *simpleEditableGraph, reverseComputers map[int]string) {
+func part1and2(g *simpleEditableGraph, reverseComputers map[int]string) {
 	cliqueChannel := make(chan []int)
 
 	go graph.AllMaximalCliques(g, cliqueChannel)
@@ -76,18 +76,27 @@ func part1(g *simpleEditableGraph, reverseComputers map[int]string) {
 	threeCliques := 0
 	k := 3
 
-	seenCombinations := make(map[string]struct{})
+	type combination [3]int
+	seenCombinations := make(map[combination]struct{})
 
 	actualCombination := make([]int, k)
 	combinationIndices := make([]int, k)
 	keyParts := make([]string, k)
 
+	maxCliqueLen := 0
+	var maxClique []int
+
 	for clique := range cliqueChannel {
+		if len(clique) > maxCliqueLen {
+			maxCliqueLen = len(clique)
+			maxClique = clique
+		}
 		if len(clique) >= 3 {
 			n := len(clique)
 			gen := combin.NewCombinationGenerator(n, k)
 			for gen.Next() {
 				gen.Combination(combinationIndices)
+
 				for i, v := range combinationIndices {
 					actualCombination[i] = clique[v]
 				}
@@ -96,13 +105,12 @@ func part1(g *simpleEditableGraph, reverseComputers map[int]string) {
 				for i, v := range actualCombination {
 					keyParts[i] = reverseComputers[v]
 				}
-				key := strings.Join(keyParts, ",")
 
-				if _, exists := seenCombinations[key]; exists {
+				if _, exists := seenCombinations[combination(actualCombination)]; exists {
 					continue
 				}
 
-				seenCombinations[key] = struct{}{}
+				seenCombinations[combination(actualCombination)] = struct{}{}
 
 				if anyStartsWithT(keyParts) {
 					threeCliques++
@@ -111,34 +119,18 @@ func part1(g *simpleEditableGraph, reverseComputers map[int]string) {
 		}
 	}
 
-	fmt.Println("ANSWER1: threeCliques:", threeCliques)
-}
-
-func part2(g *simpleEditableGraph, reverseComputers map[int]string) {
-	cliqueChannel := make(chan []int)
-
-	go graph.AllMaximalCliques(g, cliqueChannel)
-
-	maxCliqueLen := 0
-	var maxClique []int
-	for clique := range cliqueChannel {
-		if len(clique) > maxCliqueLen {
-			maxCliqueLen = len(clique)
-			maxClique = clique
-		}
-	}
-
-	cliqueComputers := make([]string, len(maxClique))
+	maxCliqueComputers := make([]string, len(maxClique))
 	for i, id := range maxClique {
-		cliqueComputers[i] = reverseComputers[id]
+		maxCliqueComputers[i] = reverseComputers[id]
 	}
 
-	sort.Strings(cliqueComputers)
-	fmt.Println("ANSWER2: cliqueComputers:", strings.Join(cliqueComputers, ","))
+	sort.Strings(maxCliqueComputers)
+
+	fmt.Println("ANSWER1: threeCliques:", threeCliques)
+	fmt.Println("ANSWER2: maxCliqueComputers:", strings.Join(maxCliqueComputers, ","))
 }
 
 func main() {
 	g, reverseComputers := buildGraph()
-	part1(g, reverseComputers)
-	part2(g, reverseComputers)
+	part1and2(g, reverseComputers)
 }
