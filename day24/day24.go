@@ -16,6 +16,11 @@ type gate struct {
 	Output    string
 }
 
+type day24 struct {
+	wires map[string]int
+	gates []gate
+}
+
 func parseGate(gateLine string) gate {
 	var g gate
 	fmt.Sscanf(gateLine, "%s %s %s -> %s", &g.Left, &g.Operation, &g.Right, &g.Output)
@@ -40,65 +45,6 @@ func runGate(gate gate, wires map[string]int) bool {
 		log.Fatalf("Unknown operation: %s", gate.Operation)
 	}
 	return true
-}
-
-func part1() {
-	file, err := os.ReadFile("input.txt")
-	if err != nil {
-		log.Fatalf("Error reading file: %v", err)
-	}
-
-	parts := strings.Split(string(file), "\n\n")
-
-	inputLines := strings.Split(parts[0], "\n")
-
-	inputWires := make(map[string]int)
-
-	for _, line := range inputLines {
-		parts := strings.Split(line, ": ")
-		value, err := strconv.Atoi(parts[1])
-		if err != nil {
-			log.Fatalf("Error converting string to int: %v", err)
-		}
-		inputWires[parts[0]] = value
-	}
-
-	gateLines := strings.Split(strings.Trim(parts[1], "\n"), "\n")
-	gates := make([]gate, len(gateLines))
-	for i, gate := range gateLines {
-		gates[i] = parseGate(gate)
-	}
-
-	for len(gates) > 0 {
-		gate := gates[0]
-		gates = gates[1:]
-
-		if !runGate(gate, inputWires) {
-			gates = append(gates, gate)
-		}
-	}
-
-	zBits := make([]string, 0)
-	for key := range inputWires {
-		if strings.HasPrefix(key, "z") {
-			zBits = append(zBits, key)
-		}
-	}
-
-	sort.Sort(sort.Reverse(sort.StringSlice(zBits)))
-
-	var zBinary []string
-	for _, key := range zBits {
-		zBinary = append(zBinary, strconv.Itoa(inputWires[key]))
-	}
-
-	zBinaryString := strings.Join(zBinary, "")
-	zBinaryInt, err := strconv.ParseInt(zBinaryString, 2, 64)
-	if err != nil {
-		log.Fatalf("Error converting binary string to int: %v", err)
-	}
-
-	fmt.Println("ANSWER1: zBinaryInt:", zBinaryInt)
 }
 
 func findOutputWire(a, b, operator string, gates []gate) string {
@@ -173,13 +119,68 @@ func getSwaps(gates []gate) []string {
 	return swaps
 }
 
-func part2() {
+func (d *day24) part1() {
+	gates := d.gates
+
+	for len(gates) > 0 {
+		gate := gates[0]
+		gates = gates[1:]
+
+		if !runGate(gate, d.wires) {
+			gates = append(gates, gate)
+		}
+	}
+
+	zBits := make([]string, 0)
+	for key := range d.wires {
+		if strings.HasPrefix(key, "z") {
+			zBits = append(zBits, key)
+		}
+	}
+
+	sort.Sort(sort.Reverse(sort.StringSlice(zBits)))
+
+	var zBinary []string
+	for _, key := range zBits {
+		zBinary = append(zBinary, strconv.Itoa(d.wires[key]))
+	}
+
+	zBinaryString := strings.Join(zBinary, "")
+	zBinaryInt, err := strconv.ParseInt(zBinaryString, 2, 64)
+	if err != nil {
+		log.Fatalf("Error converting binary string to int: %v", err)
+	}
+
+	fmt.Println("ANSWER1: zBinaryInt:", zBinaryInt)
+}
+
+func (d *day24) part2() {
+	swaps := getSwaps(d.gates)
+	sort.Sort(sort.StringSlice(swaps))
+	fmt.Println("ANSWER2: swaps:", strings.Join(swaps, ","))
+}
+
+func solve() *day24 {
 	file, err := os.ReadFile("input.txt")
 	if err != nil {
-		log.Fatalf("Error reading file: %v", err)
+		fmt.Println("File reading error", err)
+		return nil
 	}
 
 	parts := strings.Split(string(file), "\n\n")
+
+	inputLines := strings.Split(parts[0], "\n")
+
+	inputWires := make(map[string]int)
+
+	for _, line := range inputLines {
+		parts := strings.Split(line, ": ")
+		value, err := strconv.Atoi(parts[1])
+		if err != nil {
+			log.Fatalf("Error converting string to int: %v", err)
+		}
+		inputWires[parts[0]] = value
+	}
 
 	gateLines := strings.Split(strings.Trim(parts[1], "\n"), "\n")
 	gates := make([]gate, len(gateLines))
@@ -187,12 +188,14 @@ func part2() {
 		gates[i] = parseGate(gate)
 	}
 
-	swaps := getSwaps(gates)
-	sort.Sort(sort.StringSlice(swaps))
-	fmt.Println("ANSWER2: swaps:", strings.Join(swaps, ","))
+	return &day24{
+		wires: inputWires,
+		gates: gates,
+	}
 }
 
 func main() {
-	part1()
-	part2()
+	d := solve()
+	d.part1()
+	d.part2()
 }

@@ -12,7 +12,12 @@ import (
 	"gonum.org/v1/gonum/stat/combin"
 )
 
-func buildGraph() (*simpleEditableGraph, map[int]string) {
+type day23 struct {
+	graph            *simpleEditableGraph
+	reverseComputers map[int]string
+}
+
+func solve() *day23 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatalf("Error reading file: %s", err)
@@ -56,13 +61,13 @@ func buildGraph() (*simpleEditableGraph, map[int]string) {
 		g.AddEdge(edge[0], edge[1])
 	}
 
-	return g, reverseComputers
+	return &day23{g, reverseComputers}
 }
 
-func part1and2(g *simpleEditableGraph, reverseComputers map[int]string) {
+func (d *day23) part1and2() {
 	cliqueChannel := make(chan []int)
 
-	go graph.AllMaximalCliques(g, cliqueChannel)
+	go graph.AllMaximalCliques(d.graph, cliqueChannel)
 
 	anyStartsWithT := func(combination []string) bool {
 		for _, v := range combination {
@@ -103,7 +108,7 @@ func part1and2(g *simpleEditableGraph, reverseComputers map[int]string) {
 
 				sort.Ints(actualCombination)
 				for i, v := range actualCombination {
-					keyParts[i] = reverseComputers[v]
+					keyParts[i] = d.reverseComputers[v]
 				}
 
 				if _, exists := seenCombinations[combination(actualCombination)]; exists {
@@ -121,7 +126,7 @@ func part1and2(g *simpleEditableGraph, reverseComputers map[int]string) {
 
 	maxCliqueComputers := make([]string, len(maxClique))
 	for i, id := range maxClique {
-		maxCliqueComputers[i] = reverseComputers[id]
+		maxCliqueComputers[i] = d.reverseComputers[id]
 	}
 
 	sort.Strings(maxCliqueComputers)
@@ -131,6 +136,5 @@ func part1and2(g *simpleEditableGraph, reverseComputers map[int]string) {
 }
 
 func main() {
-	g, reverseComputers := buildGraph()
-	part1and2(g, reverseComputers)
+	solve().part1and2()
 }

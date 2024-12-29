@@ -7,7 +7,12 @@ import (
 	"strings"
 )
 
-func executeInstructions(registers map[string]int, program []int) []int {
+type day17 struct {
+	registers map[string]int
+	program   []int
+}
+
+func (d *day17) executeInstructions() []int {
 	outs := make([]int, 0)
 
 	getComboValue := func(operand int) int {
@@ -19,11 +24,11 @@ func executeInstructions(registers map[string]int, program []int) []int {
 			case 3:
 				return operand
 			case 4:
-				return registers["A"]
+				return d.registers["A"]
 			case 5:
-				return registers["B"]
+				return d.registers["B"]
 			case 6:
-				return registers["C"]
+				return d.registers["C"]
 			case 7:
 				panic("Invalid operand")
 			}
@@ -32,21 +37,21 @@ func executeInstructions(registers map[string]int, program []int) []int {
 	}
 
 	adv := func(operand int) {
-		numerator := registers["A"]
+		numerator := d.registers["A"]
 		divisor := getComboValue(operand)
-		registers["A"] = numerator / (1 << (divisor))
+		d.registers["A"] = numerator / (1 << (divisor))
 	}
 
 	bxl := func(operand int) {
-		registers["B"] ^= operand
+		d.registers["B"] ^= operand
 	}
 
 	bst := func(operand int) {
-		registers["B"] = getComboValue(operand) % 8
+		d.registers["B"] = getComboValue(operand) % 8
 	}
 
 	bxc := func(_ int) {
-		registers["B"] ^= registers["C"]
+		d.registers["B"] ^= d.registers["C"]
 	}
 
 	out := func(operand int) {
@@ -54,15 +59,15 @@ func executeInstructions(registers map[string]int, program []int) []int {
 	}
 
 	bdv := func(operand int) {
-		numerator := registers["A"]
+		numerator := d.registers["A"]
 		divisor := getComboValue(operand)
-		registers["B"] = numerator / (1 << (divisor))
+		d.registers["B"] = numerator / (1 << (divisor))
 	}
 
 	cdv := func(operand int) {
-		numerator := registers["A"]
+		numerator := d.registers["A"]
 		divisor := getComboValue(operand)
-		registers["C"] = numerator / (1 << (divisor))
+		d.registers["C"] = numerator / (1 << (divisor))
 	}
 
 	instructions := map[int]func(int){
@@ -76,12 +81,12 @@ func executeInstructions(registers map[string]int, program []int) []int {
 	}
 
 	instructionPointer := 0
-	for instructionPointer < len(program) {
-		instruction := program[instructionPointer]
-		operand := program[instructionPointer+1]
+	for instructionPointer < len(d.program) {
+		instruction := d.program[instructionPointer]
+		operand := d.program[instructionPointer+1]
 
 		if instruction == 3 {
-			if registers["A"] != 0 {
+			if d.registers["A"] != 0 {
 				instructionPointer = operand
 				continue
 			}
@@ -114,8 +119,8 @@ type queueItem struct {
 	value  int
 }
 
-func findQuine(registers map[string]int, program []int) int {
-	queue := []queueItem{{len(program) - 1, 0}}
+func (d *day17) findQuine() int {
+	queue := []queueItem{{len(d.program) - 1, 0}}
 
 	for len(queue) > 0 {
 		current := queue[0]
@@ -124,13 +129,13 @@ func findQuine(registers map[string]int, program []int) int {
 		for i := 0; i < 8; i++ {
 			newValue := (current.value << 3) + i
 
-			registers["A"] = newValue
-			registers["B"] = 0
-			registers["C"] = 0
+			d.registers["A"] = newValue
+			d.registers["B"] = 0
+			d.registers["C"] = 0
 
-			outs := executeInstructions(registers, program)
+			outs := d.executeInstructions()
 
-			if areSlicesEqual(outs, program[current.offset:]) {
+			if areSlicesEqual(outs, d.program[current.offset:]) {
 				if current.offset == 0 {
 					return newValue
 				}
@@ -142,11 +147,24 @@ func findQuine(registers map[string]int, program []int) int {
 	return -1
 }
 
-func part1and2() {
+func (d *day17) part1() {
+	outs := d.executeInstructions()
+	outsStr := make([]string, len(outs))
+	for i, v := range outs {
+		outsStr[i] = fmt.Sprintf("%d", v)
+	}
+	fmt.Println("ANSWER1: outs:", strings.Join(outsStr, ","))
+}
+
+func (d *day17) part2() {
+	fmt.Println("ANSWER2: quineValue:", d.findQuine())
+}
+
+func solve() *day17 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println("Error opening file", err)
-		return
+		return nil
 	}
 	defer file.Close()
 
@@ -175,15 +193,11 @@ func part1and2() {
 		fmt.Sscanf(v, "%d", &program[i])
 	}
 
-	outs := executeInstructions(registers, program)
-	outsStr := make([]string, len(outs))
-	for i, v := range outs {
-		outsStr[i] = fmt.Sprintf("%d", v)
-	}
-	fmt.Println("ANSWER1: outs:", strings.Join(outsStr, ","))
-	fmt.Println("ANSWER2: quineValue:", findQuine(registers, program))
+	return &day17{registers, program}
 }
 
 func main() {
-	part1and2()
+	d := solve()
+	d.part1()
+	d.part2()
 }

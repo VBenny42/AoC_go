@@ -7,7 +7,13 @@ import (
 	"os"
 )
 
-func neighborsFn(cell state, g grid, width, height int) []state {
+type day16 struct {
+	grid
+	height int
+	width  int
+}
+
+func (d *day16) neighborsFn(cell state) []state {
 	neighbors := make([]state, 0)
 	for _, d := range []direction{UP, LEFT, DOWN, RIGHT} {
 		if d == cell.d {
@@ -18,19 +24,19 @@ func neighborsFn(cell state, g grid, width, height int) []state {
 
 	switch cell.d {
 	case UP:
-		if cell.y > 0 && g[cell.y-1][cell.x] != '#' {
+		if cell.y > 0 && d.grid[cell.y-1][cell.x] != '#' {
 			neighbors = append(neighbors, state{x: cell.x, y: cell.y - 1, d: cell.d})
 		}
 	case LEFT:
-		if cell.x > 0 && g[cell.y][cell.x-1] != '#' {
+		if cell.x > 0 && d.grid[cell.y][cell.x-1] != '#' {
 			neighbors = append(neighbors, state{x: cell.x - 1, y: cell.y, d: cell.d})
 		}
 	case DOWN:
-		if cell.y < height-1 && g[cell.y+1][cell.x] != '#' {
+		if cell.y < d.height-1 && d.grid[cell.y+1][cell.x] != '#' {
 			neighbors = append(neighbors, state{x: cell.x, y: cell.y + 1, d: cell.d})
 		}
 	case RIGHT:
-		if cell.x < width-1 && g[cell.y][cell.x+1] != '#' {
+		if cell.x < d.width-1 && d.grid[cell.y][cell.x+1] != '#' {
 			neighbors = append(neighbors, state{x: cell.x + 1, y: cell.y, d: cell.d})
 		}
 	}
@@ -53,32 +59,16 @@ func costFn(a, b state) int {
 	return 0
 }
 
-func part1and2() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println("Failed to open file", err)
-		return
-	}
-	defer file.Close()
-
-	var grid grid
-
-	s := bufio.NewScanner(file)
-	for s.Scan() {
-		grid = append(grid, []rune(s.Text()))
-	}
-
-	height, width := len(grid), len(grid[0])
-
+func (d *day16) part1and2() {
 	var start state
 	ends := make([]state, 0)
 
-	for y := 0; y < height; y++ {
-		for x := 0; x < width; x++ {
-			if grid[y][x] == 'S' {
+	for y := 0; y < d.height; y++ {
+		for x := 0; x < d.width; x++ {
+			if d.grid[y][x] == 'S' {
 				start = state{x: x, y: y, d: UP}
 			}
-			if grid[y][x] == 'E' {
+			if d.grid[y][x] == 'E' {
 				ends = append(ends, state{x: x, y: y, d: UP})
 				ends = append(ends, state{x: x, y: y, d: RIGHT})
 				ends = append(ends, state{x: x, y: y, d: DOWN})
@@ -92,12 +82,8 @@ func part1and2() {
 		return
 	}
 
-	n := func(cell state) []state {
-		return neighborsFn(cell, grid, width, height)
-	}
-
-	d := dijkstra{
-		neighbors: n,
+	dijk := dijkstra{
+		neighbors: d.neighborsFn,
 		cost:      costFn,
 		previous:  make(map[state][]state),
 		costs:     make(map[state]int),
@@ -105,26 +91,46 @@ func part1and2() {
 		maxCost:   math.MaxInt,
 	}
 
-	minCost := d.maxCost
-	d.findPath(start)
+	minCost := dijk.maxCost
+	dijk.findPath(start)
 	var minEnd state
 	for _, end := range ends {
-		cost := d.getCost(end)
+		cost := dijk.getCost(end)
 		if cost < minCost {
 			minCost = cost
 			minEnd = end
 		}
 	}
 
-	tilesAll := make(map[struct{ x, y int }]struct{})
-	for _, node := range d.getPaths(minEnd) {
-		tilesAll[struct{ x, y int }{x: node.x, y: node.y}] = struct{}{}
+	allTiles := make(map[struct{ x, y int }]struct{})
+	for _, node := range dijk.getPaths(minEnd) {
+		allTiles[struct{ x, y int }{x: node.x, y: node.y}] = struct{}{}
 	}
 
 	fmt.Println("ANSWER1: Least cost path:", minCost)
-	fmt.Println("ANSWER2: Tiles on all paths", len(tilesAll))
+	fmt.Println("ANSWER2: All tiles on paths", len(allTiles))
+}
+
+func solve() *day16 {
+	file, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Println("Failed to open file", err)
+		return nil
+	}
+	defer file.Close()
+
+	var grid grid
+
+	s := bufio.NewScanner(file)
+	for s.Scan() {
+		grid = append(grid, []rune(s.Text()))
+	}
+
+	height, width := len(grid), len(grid[0])
+
+	return &day16{grid, height, width}
 }
 
 func main() {
-	part1and2()
+	solve().part1and2()
 }

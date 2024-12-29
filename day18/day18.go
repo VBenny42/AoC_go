@@ -16,6 +16,11 @@ type queueItem struct {
 	steps int
 }
 
+type day18 struct {
+	grid      [][]bool
+	obstacles []position
+}
+
 var m, n = 71, 71
 
 func bfs(grid [][]bool) (int, error) {
@@ -58,36 +63,19 @@ func bfs(grid [][]bool) (int, error) {
 	return 0, errors.New("No path found")
 }
 
-func part1and2() {
-	grid := make([][]bool, m)
-
-	for i := 0; i < m; i++ {
-		grid[i] = make([]bool, n)
-	}
-
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer file.Close()
-
-	scanner := bufio.NewScanner(file)
-	i := 0
-	var pos position
-	for scanner.Scan() {
+func (d *day18) part1and2() {
+	for i, pos := range d.obstacles {
 		if i == 1024 {
-			length, _ := bfs(grid)
+			length, _ := bfs(d.grid)
 			fmt.Println("ANSWER1: shortestPathLength", length)
 		}
 
-		fmt.Sscanf(scanner.Text(), "%d,%d", &pos.x, &pos.y)
-		grid[pos.x][pos.y] = true
+		d.grid[pos.x][pos.y] = true
 
 		// Break happens at 2913, so we can just check after that
 		// If I didn't know the break point, I'd have to check bfs after every iteration
 		if i > 2912 {
-			_, err = bfs(grid)
+			_, err := bfs(d.grid)
 			if err != nil {
 				fmt.Println("ANSWER2:", err, "at", i, pos)
 				return
@@ -97,6 +85,32 @@ func part1and2() {
 	}
 }
 
+func solve() *day18 {
+	grid := make([][]bool, m)
+
+	for i := 0; i < m; i++ {
+		grid[i] = make([]bool, n)
+	}
+
+	file, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer file.Close()
+
+	obstacles := make([]position, 0)
+
+	scanner := bufio.NewScanner(file)
+	var pos position
+	for scanner.Scan() {
+		fmt.Sscanf(scanner.Text(), "%d,%d", &pos.x, &pos.y)
+		obstacles = append(obstacles, pos)
+	}
+
+	return &day18{grid, obstacles}
+}
+
 func main() {
-	part1and2()
+	solve().part1and2()
 }

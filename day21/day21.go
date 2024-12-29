@@ -12,14 +12,24 @@ type memoKey struct {
 	numRobots   int
 }
 
-func shortestSequence(level int, sequenceStr string, numRobots int, memo map[memoKey]int) int {
+type line struct {
+	text   string
+	number int
+}
+
+type day21 struct {
+	memo  map[memoKey]int
+	codes []line
+}
+
+func (d *day21) shortestSequence(level int, sequenceStr string, numRobots int) int {
 	key := memoKey{level, sequenceStr, numRobots}
-	if value, ok := memo[key]; ok {
+	if value, ok := d.memo[key]; ok {
 		return value
 	}
 
 	if level == numRobots+1 {
-		memo[key] = len(sequenceStr)
+		d.memo[key] = len(sequenceStr)
 		return len(sequenceStr)
 	}
 
@@ -44,7 +54,7 @@ func shortestSequence(level int, sequenceStr string, numRobots int, memo map[mem
 		minPath = maxVal
 
 		for _, path := range transitions[start][target] {
-			result := shortestSequence(level+1, path+"A", numRobots, memo)
+			result := d.shortestSequence(level+1, path+"A", numRobots)
 			if result < minPath {
 				minPath = result
 			}
@@ -56,43 +66,56 @@ func shortestSequence(level int, sequenceStr string, numRobots int, memo map[mem
 		sequence += minPath
 	}
 
-	memo[key] = sequence
+	d.memo[key] = sequence
 	return sequence
 }
 
-func getShortestSequenceLength(memo map[memoKey]int, numRobots int) int {
+func (d *day21) getShortestSequenceLength(numRobots int) int {
+	totalShortestSequence := 0
+
+	for _, code := range d.codes {
+		line := code.text
+		shortestSequenceLength := d.shortestSequence(0, line, numRobots)
+		totalShortestSequence += shortestSequenceLength * code.number
+	}
+	return totalShortestSequence
+}
+
+func (d *day21) part1() {
+	fmt.Println("ANSWER1: 2 robots shortestSequenceLength:", d.getShortestSequenceLength(2))
+}
+
+func (d *day21) part2() {
+	fmt.Println("ANSWER2: 25 robots shortestSequenceLength:", d.getShortestSequenceLength(25))
+}
+
+func solve() *day21 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		println("Error: ", err)
-		return 0
+		return nil
 	}
 	defer file.Close()
 
 	s := bufio.NewScanner(file)
 
-	totalShortestSequence := 0
+	codes := make([]line, 0)
 
-	var number int
+	var n int
 
 	for s.Scan() {
-		line := s.Text()
-		fmt.Sscanf(line, "%d", &number)
-		shortestSequenceLength := shortestSequence(0, line, numRobots, memo)
-		totalShortestSequence += shortestSequenceLength * number
+		code := s.Text()
+		fmt.Sscanf(code, "%d", &n)
+		codes = append(codes, line{code, n})
 	}
-	return totalShortestSequence
-}
 
-func part1(memo map[memoKey]int) {
-	fmt.Println("ANSWER1: 2 robots shortestSequenceLength:", getShortestSequenceLength(memo, 2))
-}
+	memo := make(map[memoKey]int)
 
-func part2(memo map[memoKey]int) {
-	fmt.Println("ANSWER2: 25 robots shortestSequenceLength:", getShortestSequenceLength(memo, 25))
+	return &day21{memo, codes}
 }
 
 func main() {
-	memo := make(map[memoKey]int)
-	part1(memo)
-	part2(memo)
+	d := solve()
+	d.part1()
+	d.part2()
 }

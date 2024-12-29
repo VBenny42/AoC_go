@@ -11,6 +11,10 @@ type (
 	coord struct{ x, y int }
 )
 
+type day20 struct {
+	grid
+}
+
 func isValid(g grid, c coord) bool {
 	return c.y >= 0 && c.y < len(g) && c.x >= 0 && c.x < len(g[0]) && g[c.y][c.x] != '#'
 }
@@ -85,25 +89,11 @@ func manhattanDistance(c1, c2 coord) int {
 	return abs(c1.x-c2.x) + abs(c1.y-c2.y)
 }
 
-func part1and2() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return
-	}
-	defer file.Close()
+func (d *day20) part1and2() {
+	start := getCoord(d.grid, 'S')
+	end := getCoord(d.grid, 'E')
 
-	var grid grid
-
-	s := bufio.NewScanner(file)
-	for s.Scan() {
-		grid = append(grid, []rune(s.Text()))
-	}
-
-	start := getCoord(grid, 'S')
-	end := getCoord(grid, 'E')
-
-	path := bfs(grid, start, end)
+	path := bfs(d.grid, start, end)
 
 	threshold := 100
 
@@ -123,6 +113,24 @@ func part1and2() {
 	fmt.Println("ANSWER2: twentyCheats:", twentyCheats)
 }
 
+func solve() *day20 {
+	file, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Println("Error reading file:", err)
+		return nil
+	}
+	defer file.Close()
+
+	var grid grid
+
+	s := bufio.NewScanner(file)
+	for s.Scan() {
+		grid = append(grid, []rune(s.Text()))
+	}
+
+	return &day20{grid}
+}
+
 func main() {
-	part1and2()
+	solve().part1and2()
 }

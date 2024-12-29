@@ -6,6 +6,10 @@ import (
 	"os"
 )
 
+type day22 struct {
+	seeds []int
+}
+
 func findSecretNumber(n int) int {
 	mod := 16777216
 	n = ((n * 64) ^ n) % mod
@@ -14,7 +18,7 @@ func findSecretNumber(n int) int {
 	return n
 }
 
-func getPricesAndChanges(secretNumber int) ([]int, []int) {
+func getPricesAndChanges(secretNumber int) ([]int, []int, int) {
 	last := secretNumber
 	prices := make([]int, 2000)
 	changes := make([]int, 2000)
@@ -24,7 +28,7 @@ func getPricesAndChanges(secretNumber int) ([]int, []int) {
 		changes[i] = (secretNumber % 10) - (last % 10)
 		last = secretNumber
 	}
-	return prices, changes
+	return prices, changes, last
 }
 
 type sequence [4]int
@@ -46,48 +50,18 @@ func getBananaSequences(prices []int, changes []int) map[sequence]int {
 	return sequences
 }
 
-func part1() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer file.Close()
+func (d *day22) part1and2() {
+	globalSequences := make(map[sequence]int, 0)
 
 	sumSecretNumbers := 0
 
-	s := bufio.NewScanner(file)
-	var n int
-	for s.Scan() {
-		fmt.Sscanf(s.Text(), "%d", &n)
-		for i := 0; i < 2000; i++ {
-			n = findSecretNumber(n)
-		}
-		sumSecretNumbers += n
-	}
-
-	fmt.Println("ANSWER1: sumSecretNumbers:", sumSecretNumbers)
-}
-
-func part2() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	defer file.Close()
-
-	globalSequences := make(map[sequence]int, 0)
-
-	s := bufio.NewScanner(file)
-	var n int
-	for s.Scan() {
-		fmt.Sscanf(s.Text(), "%d", &n)
-		prices, changes := getPricesAndChanges(n)
+	for _, n := range d.seeds {
+		prices, changes, lastSecretNumber := getPricesAndChanges(n)
 		sequences := getBananaSequences(prices, changes)
 		for k, v := range sequences {
 			globalSequences[k] += v
 		}
+		sumSecretNumbers += lastSecretNumber
 	}
 
 	maxSequence := 0
@@ -96,10 +70,30 @@ func part2() {
 			maxSequence = v
 		}
 	}
-	println("ANSWER2: maxSequence:", maxSequence)
+	fmt.Println("ANSWER1: sumSecretNumbers:", sumSecretNumbers)
+	fmt.Println("ANSWER2: maxSequence:", maxSequence)
+}
+
+func solve() *day22 {
+	file, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Println(err)
+		return nil
+	}
+	defer file.Close()
+
+	var seeds []int
+
+	s := bufio.NewScanner(file)
+	var n int
+	for s.Scan() {
+		fmt.Sscanf(s.Text(), "%d", &n)
+		seeds = append(seeds, n)
+	}
+	return &day22{seeds}
 }
 
 func main() {
-	part1()
-	part2()
+	d := solve()
+	d.part1and2()
 }

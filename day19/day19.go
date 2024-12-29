@@ -7,47 +7,38 @@ import (
 	"strings"
 )
 
-var cache = make(map[string]int)
+type day19 struct {
+	towels  []string
+	designs []string
+	cache   map[string]int
+}
 
-func differentCombos(towels []string, design string) int {
+func (d *day19) differentCombos(design string) int {
 	if len(design) == 0 {
 		return 1
 	}
 
-	if val, ok := cache[design]; ok {
+	if val, ok := d.cache[design]; ok {
 		return val
 	}
 
 	count := 0
-	for _, towel := range towels {
+	for _, towel := range d.towels {
 		if len(towel) <= len(design) && design[:len(towel)] == towel {
-			combos := differentCombos(towels, design[len(towel):])
+			combos := d.differentCombos(design[len(towel):])
 			count += combos
-			cache[design] = count
+			d.cache[design] = count
 		}
 	}
 	return count
 }
 
-func part1and2Bufio() {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println("File reading error", err)
-		return
-	}
-	defer file.Close()
-
-	s := bufio.NewScanner(file)
-	s.Scan()
-	towels := strings.Split(s.Text(), ", ")
-	s.Scan()
-
+func (d *day19) part1and2() {
 	possibleDesigns := 0
 	allCombos := 0
 
-	for s.Scan() {
-		design := s.Text()
-		combos := differentCombos(towels, design)
+	for _, design := range d.designs {
+		combos := d.differentCombos(design)
 		if combos > 0 {
 			possibleDesigns++
 		}
@@ -58,6 +49,30 @@ func part1and2Bufio() {
 	fmt.Println("ANSWER2: allCombos:", allCombos)
 }
 
+func solve() *day19 {
+	file, err := os.Open("input.txt")
+	if err != nil {
+		fmt.Println("File reading error", err)
+		return nil
+	}
+	defer file.Close()
+
+	s := bufio.NewScanner(file)
+	s.Scan()
+	towels := strings.Split(s.Text(), ", ")
+	s.Scan()
+
+	designs := make([]string, 0)
+
+	for s.Scan() {
+		designs = append(designs, s.Text())
+	}
+
+	cache := make(map[string]int)
+
+	return &day19{towels, designs, cache}
+}
+
 func main() {
-	part1and2Bufio()
+	solve().part1and2()
 }
