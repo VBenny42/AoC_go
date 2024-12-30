@@ -49,7 +49,7 @@ func (d *day19) part1and2() {
 	fmt.Println("ANSWER2: allCombos:", allCombos)
 }
 
-func solve() *day19 {
+func parse() *day19 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println("File reading error", err)
@@ -74,5 +74,5 @@ func solve() *day19 {
 }
 
 func main() {
-	solve().part1and2()
+	parse().part1and2()
 }

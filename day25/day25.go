@@ -49,7 +49,7 @@ func (d *day25) part1() {
 	fmt.Println("ANSWER: fits:", fits)
 }
 
-func solve() *day25 {
+func parse() *day25 {
 	data, err := os.ReadFile("input.txt")
 	if err != nil {
 		fmt.Println("Error reading file")
@@ -73,5 +73,5 @@ func solve() *day25 {
 }
 
 func main() {
-	solve().part1()
+	parse().part1()
 }

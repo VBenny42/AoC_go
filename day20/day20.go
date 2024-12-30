@@ -113,7 +113,7 @@ func (d *day20) part1and2() {
 	fmt.Println("ANSWER2: twentyCheats:", twentyCheats)
 }
 
-func solve() *day20 {
+func parse() *day20 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println("Error reading file:", err)
@@ -132,5 +132,5 @@ func solve() *day20 {
 }
 
 func main() {
-	solve().part1and2()
+	parse().part1and2()
 }

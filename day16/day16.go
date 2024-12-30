@@ -111,7 +111,7 @@ func (d *day16) part1and2() {
 	fmt.Println("ANSWER2: All tiles on paths", len(allTiles))
 }
 
-func solve() *day16 {
+func parse() *day16 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println("Failed to open file", err)
@@ -132,5 +132,5 @@ func solve() *day16 {
 }
 
 func main() {
-	solve().part1and2()
+	parse().part1and2()
 }

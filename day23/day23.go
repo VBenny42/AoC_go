@@ -17,7 +17,7 @@ type day23 struct {
 	reverseComputers map[int]string
 }
 
-func solve() *day23 {
+func parse() *day23 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		log.Fatalf("Error reading file: %s", err)
@@ -136,5 +136,5 @@ func (d *day23) part1and2() {
 }
 
 func main() {
-	solve().part1and2()
+	parse().part1and2()
 }

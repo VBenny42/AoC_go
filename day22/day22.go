@@ -98,7 +98,7 @@ func (d *day22) part1and2Channels() {
 	fmt.Println("ANSWER2: maxSequence:", maxSequence)
 }
 
-func solve() *day22 {
+func parse() *day22 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -118,6 +118,6 @@ func solve() *day22 {
 }
 
 func main() {
-	d := solve()
+	d := parse()
 	d.part1and2Channels()
 }

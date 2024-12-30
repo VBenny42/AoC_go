@@ -160,7 +160,7 @@ func (d *day24) part2() {
 	fmt.Println("ANSWER2: swaps:", strings.Join(swaps, ","))
 }
 
-func solve() *day24 {
+func parse() *day24 {
 	file, err := os.ReadFile("input.txt")
 	if err != nil {
 		fmt.Println("File reading error", err)
@@ -195,7 +195,7 @@ func solve() *day24 {
 }
 
 func main() {
-	d := solve()
+	d := parse()
 	d.part1()
 	d.part2()
 }

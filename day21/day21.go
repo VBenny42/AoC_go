@@ -89,7 +89,7 @@ func (d *day21) part2() {
 	fmt.Println("ANSWER2: 25 robots shortestSequenceLength:", d.getShortestSequenceLength(25))
 }
 
-func solve() *day21 {
+func parse() *day21 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		println("Error: ", err)
@@ -115,7 +115,7 @@ func solve() *day21 {
 }
 
 func main() {
-	d := solve()
+	d := parse()
 	d.part1()
 	d.part2()
 }

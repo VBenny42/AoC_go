@@ -85,7 +85,7 @@ func (d *day18) part1and2() {
 	}
 }
 
-func solve() *day18 {
+func parse() *day18 {
 	grid := make([][]bool, m)
 
 	for i := 0; i < m; i++ {
@@ -112,5 +112,5 @@ func solve() *day18 {
 }
 
 func main() {
-	solve().part1and2()
+	parse().part1and2()
 }

@@ -160,7 +160,7 @@ func (d *day17) part2() {
 	fmt.Println("ANSWER2: quineValue:", d.findQuine())
 }
 
-func solve() *day17 {
+func parse() *day17 {
 	file, err := os.Open("input.txt")
 	if err != nil {
 		fmt.Println("Error opening file", err)
@@ -197,7 +197,7 @@ func solve() *day17 {
 }
 
 func main() {
-	d := solve()
+	d := parse()
 	d.part1()
 	d.part2()
 }
