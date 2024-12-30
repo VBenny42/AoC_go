@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sync"
 )
 
 type day22 struct {
@@ -50,19 +51,30 @@ func getBananaSequences(prices []int, changes []int) map[sequence]int {
 	return sequences
 }
 
-func (d *day22) part1and2() {
-	globalSequences := make(map[sequence]int, 0)
-
+func (d *day22) part1and2GoRoutine() {
+	globalSequences := make(map[sequence]int)
 	sumSecretNumbers := 0
+	mu := &sync.Mutex{}
+	wg := &sync.WaitGroup{}
 
 	for _, n := range d.seeds {
-		prices, changes, lastSecretNumber := getPricesAndChanges(n)
-		sequences := getBananaSequences(prices, changes)
-		for k, v := range sequences {
-			globalSequences[k] += v
-		}
-		sumSecretNumbers += lastSecretNumber
+		wg.Add(1)
+		go func(n int) {
+			defer wg.Done()
+
+			prices, changes, lastSecretNumber := getPricesAndChanges(n)
+			sequences := getBananaSequences(prices, changes)
+
+			mu.Lock()
+			for k, v := range sequences {
+				globalSequences[k] += v
+			}
+			sumSecretNumbers += lastSecretNumber
+			mu.Unlock()
+		}(n)
 	}
+
+	wg.Wait()
 
 	maxSequence := 0
 	for _, v := range globalSequences {
@@ -95,5 +107,5 @@ func solve() *day22 {
 
 func main() {
 	d := solve()
-	d.part1and2()
+	d.part1and2GoRoutine()
 }
