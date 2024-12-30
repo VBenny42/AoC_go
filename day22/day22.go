@@ -51,11 +51,10 @@ func getBananaSequences(prices []int, changes []int) map[sequence]int {
 	return sequences
 }
 
-func (d *day22) part1and2GoRoutine() {
-	globalSequences := make(map[sequence]int)
-	sumSecretNumbers := 0
-	mu := &sync.Mutex{}
+func (d *day22) part1and2Channels() {
 	wg := &sync.WaitGroup{}
+	seqChan := make(chan map[sequence]int, len(d.seeds))
+	secretChan := make(chan int, len(d.seeds))
 
 	for _, n := range d.seeds {
 		wg.Add(1)
@@ -65,16 +64,28 @@ func (d *day22) part1and2GoRoutine() {
 			prices, changes, lastSecretNumber := getPricesAndChanges(n)
 			sequences := getBananaSequences(prices, changes)
 
-			mu.Lock()
-			for k, v := range sequences {
-				globalSequences[k] += v
-			}
-			sumSecretNumbers += lastSecretNumber
-			mu.Unlock()
+			seqChan <- sequences
+			secretChan <- lastSecretNumber
 		}(n)
 	}
 
-	wg.Wait()
+	go func() {
+		wg.Wait()
+		close(seqChan)
+		close(secretChan)
+	}()
+
+	globalSequences := make(map[sequence]int)
+	for seq := range seqChan {
+		for k, v := range seq {
+			globalSequences[k] += v
+		}
+	}
+
+	sumSecretNumbers := 0
+	for secret := range secretChan {
+		sumSecretNumbers += secret
+	}
 
 	maxSequence := 0
 	for _, v := range globalSequences {
@@ -82,6 +93,7 @@ func (d *day22) part1and2GoRoutine() {
 			maxSequence = v
 		}
 	}
+
 	fmt.Println("ANSWER1: sumSecretNumbers:", sumSecretNumbers)
 	fmt.Println("ANSWER2: maxSequence:", maxSequence)
 }
@@ -107,5 +119,5 @@ func solve() *day22 {
 
 func main() {
 	d := solve()
-	d.part1and2GoRoutine()
+	d.part1and2Channels()
 }
