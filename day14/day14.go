@@ -44,40 +44,6 @@ func (d *day14) moveRobot(r *robot) {
 	r.position.y = newPosY
 }
 
-func (g *grid) getQuadrant(quadrant int) [][]int {
-	var startRow, startCol, endRow, endCol int
-	switch quadrant {
-	case TOP_LEFT:
-		startRow = 0
-		startCol = 0
-		endRow = rows / 2
-		endCol = cols / 2
-	case TOP_RIGHT:
-		startRow = 0
-		startCol = cols/2 + 1
-		endRow = rows / 2
-		endCol = cols
-	case BOTTOM_LEFT:
-		startRow = rows/2 + 1
-		startCol = 0
-		endRow = rows
-		endCol = cols / 2
-	case BOTTOM_RIGHT:
-		startRow = rows/2 + 1
-		startCol = cols/2 + 1
-		endRow = rows
-		endCol = cols
-	}
-	quadrantGrid := make([][]int, endRow-startRow)
-	for i := 0; i < endRow-startRow; i++ {
-		quadrantGrid[i] = make([]int, endCol-startCol)
-		for j := 0; j < endCol-startCol; j++ {
-			quadrantGrid[i][j] = g[i+startRow][j+startCol]
-		}
-	}
-	return quadrantGrid
-}
-
 func (g *grid) printScaledBitmap(filename string, scaleFactor int) {
 	file, err := os.Create(filename)
 	if err != nil {
@@ -101,57 +67,79 @@ func (g *grid) printScaledBitmap(filename string, scaleFactor int) {
 	}
 }
 
-func printGrid(g *grid) {
-	for i := 0; i < rows; i++ {
-		for j := 0; j < cols; j++ {
-			if g[i][j] > 0 {
-				fmt.Print("#")
-			} else {
-				fmt.Print(".")
-			}
+func (g *grid) getSafetyFactor() int {
+	getBoundingBox := func(quadrant int) (int, int, int, int) {
+		var startRow, startCol, endRow, endCol int
+		switch quadrant {
+		case TOP_LEFT:
+			startRow = 0
+			startCol = 0
+			endRow = rows / 2
+			endCol = cols / 2
+		case TOP_RIGHT:
+			startRow = 0
+			startCol = cols/2 + 1
+			endRow = rows / 2
+			endCol = cols
+		case BOTTOM_LEFT:
+			startRow = rows/2 + 1
+			startCol = 0
+			endRow = rows
+			endCol = cols / 2
+		case BOTTOM_RIGHT:
+			startRow = rows/2 + 1
+			startCol = cols/2 + 1
+			endRow = rows
+			endCol = cols
 		}
-		fmt.Println()
-	}
-
-	fmt.Println()
-}
-
-func (d *day14) part1() {
-	for _, r := range d.robots {
-		for i := 0; i < 100; i++ {
-			d.moveRobot(&r)
-		}
+		return startRow, startCol, endRow, endCol
 	}
 
 	safetyFactor := 1
+
 	for q := TOP_LEFT; q <= BOTTOM_RIGHT; q++ {
-		quadrantGrid := d.grid.getQuadrant(q)
+		startRow, startCol, endRow, endCol := getBoundingBox(q)
 		numRobots := 0
-		for i := 0; i < len(quadrantGrid); i++ {
-			for j := 0; j < len(quadrantGrid[i]); j++ {
-				numRobots += quadrantGrid[i][j]
+		for i := startRow; i < endRow; i++ {
+			for j := startCol; j < endCol; j++ {
+				numRobots += g[i][j]
 			}
 		}
 		safetyFactor *= numRobots
 	}
 
-	fmt.Println("ANSWER1: safetyFactor:", safetyFactor)
+	return safetyFactor
+}
+
+func (d *day14) part1() {
+	for j := 0; j < 100; j++ {
+		for i := range d.robots {
+			d.moveRobot(&d.robots[i])
+		}
+	}
+
+	fmt.Println("ANSWER1: safetyFactor:", d.grid.getSafetyFactor())
 }
 
 func (d *day14) part2() {
-	for i := 0; i < 10000; i++ {
-		for _, r := range d.robots {
-			d.moveRobot(&r)
+	minSafetyFactor, minIteration := 1<<31-1, 0
+	for i := 100; i < 10000; i++ {
+		for j := range d.robots {
+			d.moveRobot(&d.robots[j])
 		}
 
-		// TODO: Grid looked the same for all iterations, no idea why
-		// Couldn't get it working like python version,
-		// correct iteration should be 7752
-		if i >= 7750 && i <= 7755 {
-			d.grid.printScaledBitmap(fmt.Sprintf("output%d.pbm", i), 7)
-		}
+		// if i == 7752 {
+		// 	d.grid.printScaledBitmap(fmt.Sprintf("output%d.pbm", i), 7)
+		// }
 
+		safetyFactor := d.grid.getSafetyFactor()
+		if safetyFactor < minSafetyFactor {
+			minSafetyFactor = safetyFactor
+			minIteration = i
+		}
 	}
+
+	fmt.Println("ANSWER2: minSafetyFactor:", minSafetyFactor, "at iteration:", minIteration)
 }
 
 func parse() *day14 {
@@ -180,6 +168,7 @@ func parse() *day14 {
 }
 
 func main() {
-	parse().part1()
-	// parse().part2()
+	d := parse()
+	d.part1()
+	d.part2()
 }
