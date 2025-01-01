@@ -5,7 +5,6 @@ import (
 	"os"
 	"strings"
 	"sync"
-	"sync/atomic"
 )
 
 type coord struct {
@@ -120,17 +119,6 @@ func (d *day06) part1() {
 	fmt.Println("ANSWER1: distinct positions:", len(distinctPositions))
 }
 
-func (d *day06) part2() {
-	sum := 0
-	for _, c := range d.distinctPositions {
-		if d.doesInduceLoop(c) {
-			sum++
-		}
-	}
-
-	fmt.Println("ANSWER2: number of positions that induce a loop:", sum)
-}
-
 func (d *day06) part2Channels() {
 	sum := 0
 
@@ -157,26 +145,6 @@ func (d *day06) part2Channels() {
 	}
 
 	fmt.Println("ANSWER2: number of positions that induce a loop:", sum)
-}
-
-func (d *day06) part2Atomic() {
-	var sum atomic.Uint32
-
-	var wg sync.WaitGroup
-	wg.Add(len(d.distinctPositions))
-
-	for _, c := range d.distinctPositions {
-		go func(c coord) {
-			defer wg.Done()
-			if d.doesInduceLoop(c) {
-				sum.Add(1)
-			}
-		}(c)
-	}
-
-	wg.Wait()
-
-	fmt.Println("ANSWER2: number of positions that induce a loop:", sum.Load())
 }
 
 func parse() *day06 {
@@ -213,7 +181,5 @@ func parse() *day06 {
 func main() {
 	d := parse()
 	d.part1()
-	// d.part2()
 	d.part2Channels()
-	// d.part2Atomic()
 }
