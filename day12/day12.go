@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	// "github.com/davecgh/go-spew/spew"
 )
 
 type (
@@ -22,32 +21,32 @@ type day12 struct {
 type direction [2]int
 
 var (
-	UP    direction = [2]int{0, -1}
-	DOWN  direction = [2]int{0, 1}
-	LEFT  direction = [2]int{-1, 0}
-	RIGHT direction = [2]int{1, 0}
+	up    direction = [2]int{0, -1}
+	down  direction = [2]int{0, 1}
+	left  direction = [2]int{-1, 0}
+	right direction = [2]int{1, 0}
 )
 
 func (c coord) getNeighbor(g grid, dir direction) (coord, error) {
 	value := g[c.y][c.x]
 	var neighbor coord
 	switch dir {
-	case UP:
+	case up:
 		if c.y == 0 {
 			return coord{}, fmt.Errorf("No neighbor in that direction")
 		}
 		neighbor = coord{c.x, c.y - 1}
-	case DOWN:
+	case down:
 		if c.y == len(g)-1 {
 			return coord{}, fmt.Errorf("No neighbor in that direction")
 		}
 		neighbor = coord{c.x, c.y + 1}
-	case LEFT:
+	case left:
 		if c.x == 0 {
 			return coord{}, fmt.Errorf("No neighbor in that direction")
 		}
 		neighbor = coord{c.x - 1, c.y}
-	case RIGHT:
+	case right:
 		if c.x == len(g[0])-1 {
 			return coord{}, fmt.Errorf("No neighbor in that direction")
 		}
@@ -88,7 +87,7 @@ func buildRegions(g grid) (map[rune][]map[coord]struct{}, [][]map[direction]stru
 				region[position] = struct{}{}
 				visited[position.y][position.x] = true
 
-				for _, direction := range []direction{UP, RIGHT, DOWN, LEFT} {
+				for _, direction := range []direction{up, right, down, left} {
 					nextPosition, err := position.getNeighbor(g, direction)
 					if err == nil && !visited[nextPosition.y][nextPosition.x] {
 						stack = append(stack, nextPosition)
@@ -120,7 +119,7 @@ func (d *day12) calculatePerimeter(region map[coord]struct{}) int {
 func countSides(region map[coord]struct{}) int {
 	sideCount := 0
 
-	for _, dir := range []direction{UP, RIGHT, DOWN, LEFT} {
+	for _, dir := range []direction{up, right, down, left} {
 		dX, dY := dir[0], dir[1]
 		visited := make(map[coord]struct{})
 

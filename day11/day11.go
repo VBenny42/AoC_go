@@ -35,9 +35,9 @@ func applyRulesRecursive(stone, blinks int) int {
 	var result int
 
 	if int64(length)%2 == 0 {
-		split_point := length / 2
-		left := stone / int(math.Pow(10, split_point))
-		right := stone % int(math.Pow(10, split_point))
+		splitPoint := length / 2
+		left := stone / int(math.Pow(10, splitPoint))
+		right := stone % int(math.Pow(10, splitPoint))
 		result = applyRulesRecursive(left, blinks-1) + applyRulesRecursive(right, blinks-1)
 	} else {
 		result = applyRulesRecursive(stone*2024, blinks-1)

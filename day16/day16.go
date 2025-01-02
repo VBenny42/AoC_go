@@ -15,7 +15,7 @@ type day16 struct {
 
 func (d *day16) neighborsFn(cell state) []state {
 	neighbors := make([]state, 0)
-	for _, d := range []direction{UP, LEFT, DOWN, RIGHT} {
+	for _, d := range []direction{up, left, down, right} {
 		if d == cell.d {
 			continue
 		}
@@ -23,19 +23,19 @@ func (d *day16) neighborsFn(cell state) []state {
 	}
 
 	switch cell.d {
-	case UP:
+	case up:
 		if cell.y > 0 && d.grid[cell.y-1][cell.x] != '#' {
 			neighbors = append(neighbors, state{x: cell.x, y: cell.y - 1, d: cell.d})
 		}
-	case LEFT:
+	case left:
 		if cell.x > 0 && d.grid[cell.y][cell.x-1] != '#' {
 			neighbors = append(neighbors, state{x: cell.x - 1, y: cell.y, d: cell.d})
 		}
-	case DOWN:
+	case down:
 		if cell.y < d.height-1 && d.grid[cell.y+1][cell.x] != '#' {
 			neighbors = append(neighbors, state{x: cell.x, y: cell.y + 1, d: cell.d})
 		}
-	case RIGHT:
+	case right:
 		if cell.x < d.width-1 && d.grid[cell.y][cell.x+1] != '#' {
 			neighbors = append(neighbors, state{x: cell.x + 1, y: cell.y, d: cell.d})
 		}
@@ -48,10 +48,10 @@ func costFn(a, b state) int {
 		return 1
 	}
 	if a.d != b.d {
-		if (a.d == UP || a.d == DOWN) && (b.d == UP || b.d == DOWN) {
+		if (a.d == up || a.d == down) && (b.d == up || b.d == down) {
 			return 2000
 		}
-		if (a.d == LEFT || a.d == RIGHT) && (b.d == LEFT || b.d == RIGHT) {
+		if (a.d == left || a.d == right) && (b.d == left || b.d == right) {
 			return 2000
 		}
 		return 1000
@@ -66,13 +66,13 @@ func (d *day16) part1and2() {
 	for y := 0; y < d.height; y++ {
 		for x := 0; x < d.width; x++ {
 			if d.grid[y][x] == 'S' {
-				start = state{x: x, y: y, d: UP}
+				start = state{x: x, y: y, d: up}
 			}
 			if d.grid[y][x] == 'E' {
-				ends = append(ends, state{x: x, y: y, d: UP})
-				ends = append(ends, state{x: x, y: y, d: RIGHT})
-				ends = append(ends, state{x: x, y: y, d: DOWN})
-				ends = append(ends, state{x: x, y: y, d: LEFT})
+				ends = append(ends, state{x: x, y: y, d: up})
+				ends = append(ends, state{x: x, y: y, d: right})
+				ends = append(ends, state{x: x, y: y, d: down})
+				ends = append(ends, state{x: x, y: y, d: left})
 			}
 		}
 	}

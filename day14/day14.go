@@ -24,10 +24,10 @@ const (
 type grid [rows][cols]int
 
 const (
-	TOP_LEFT = iota
-	TOP_RIGHT
-	BOTTOM_LEFT
-	BOTTOM_RIGHT
+	topLeft = iota
+	topRight
+	bottomLeft
+	bottomRight
 )
 
 type day14 struct {
@@ -38,8 +38,8 @@ type day14 struct {
 func (d *day14) moveRobot(r *robot) {
 	newPosX := ((r.position.x+r.velocity.x)%cols + cols) % cols
 	newPosY := ((r.position.y+r.velocity.y)%rows + rows) % rows
-	d.grid[r.position.y][r.position.x] -= 1
-	d.grid[newPosY][newPosX] += 1
+	d.grid[r.position.y][r.position.x]--
+	d.grid[newPosY][newPosX]++
 	r.position.x = newPosX
 	r.position.y = newPosY
 }
@@ -71,22 +71,22 @@ func (g *grid) getSafetyFactor() int {
 	getBoundingBox := func(quadrant int) (int, int, int, int) {
 		var startRow, startCol, endRow, endCol int
 		switch quadrant {
-		case TOP_LEFT:
+		case topLeft:
 			startRow = 0
 			startCol = 0
 			endRow = rows / 2
 			endCol = cols / 2
-		case TOP_RIGHT:
+		case topRight:
 			startRow = 0
 			startCol = cols/2 + 1
 			endRow = rows / 2
 			endCol = cols
-		case BOTTOM_LEFT:
+		case bottomLeft:
 			startRow = rows/2 + 1
 			startCol = 0
 			endRow = rows
 			endCol = cols / 2
-		case BOTTOM_RIGHT:
+		case bottomRight:
 			startRow = rows/2 + 1
 			startCol = cols/2 + 1
 			endRow = rows
@@ -97,7 +97,7 @@ func (g *grid) getSafetyFactor() int {
 
 	safetyFactor := 1
 
-	for q := TOP_LEFT; q <= BOTTOM_RIGHT; q++ {
+	for q := topLeft; q <= bottomRight; q++ {
 		startRow, startCol, endRow, endCol := getBoundingBox(q)
 		numRobots := 0
 		for i := startRow; i < endRow; i++ {
@@ -161,7 +161,7 @@ func parse() *day14 {
 			position: struct{ x, y int }{posX, posY},
 			velocity: struct{ x, y int }{velX, velY},
 		})
-		grid[posY][posX] += 1
+		grid[posY][posX]++
 	}
 
 	return &day14{robots, grid}

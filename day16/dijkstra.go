@@ -7,10 +7,10 @@ import (
 type direction int
 
 const (
-	UP direction = iota
-	RIGHT
-	DOWN
-	LEFT
+	up direction = iota
+	right
+	down
+	left
 )
 
 type (
