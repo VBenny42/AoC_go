@@ -1,9 +1,10 @@
-package main
+package day09
 
 import (
 	"container/heap"
 	"fmt"
-	"os"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 // TIL runes are just int32, id's were stored as ints, so freeSpace was colliding with id's
@@ -152,16 +153,12 @@ func (d *day09) part2() {
 	fmt.Println("ANSWER2: checksum:", checksum(diskmap))
 }
 
-func parse() *day09 {
-	file, err := os.ReadFile("input.txt")
-	if err != nil {
-		panic(err)
-	}
+func parse(filename string) *day09 {
+	data := utils.JoinFile(filename)
 
-	line := string(file)[:len(file)-1]
-	diskmap := make([]int, len(line))
+	diskmap := make([]int, len(data))
 
-	for i, c := range line {
+	for i, c := range data {
 		value := int(c - '0')
 		diskmap[i] = value
 	}
@@ -169,8 +166,8 @@ func parse() *day09 {
 	return &day09{diskmap}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

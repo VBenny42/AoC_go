@@ -1,11 +1,12 @@
-package main
+package day01
 
 import (
 	"fmt"
-	"os"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type day01 struct {
@@ -13,18 +14,11 @@ type day01 struct {
 	list2 []int
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func (d *day01) part1() {
 	diffSum := 0
 
 	for i := 0; i < len(d.list1); i++ {
-		diffSum += abs(d.list1[i] - d.list2[i])
+		diffSum += utils.Abs(d.list1[i] - d.list2[i])
 	}
 
 	fmt.Println("ANSWER1: diffSum:", diffSum)
@@ -49,15 +43,12 @@ func (d *day01) part2() {
 }
 
 func parse(filename string) *day01 {
-	file, err := os.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
-
-	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
+	lines := utils.SplitLines(filename)
 
 	list1 := make([]int, len(lines))
 	list2 := make([]int, len(lines))
+
+	var err error
 
 	for i, line := range lines {
 		numbers := strings.Split(line, "   ")
@@ -78,8 +69,8 @@ func parse(filename string) *day01 {
 	return &day01{list1, list2}
 }
 
-func main() {
-	d := parse("input.txt")
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

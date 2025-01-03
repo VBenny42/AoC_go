@@ -1,19 +1,20 @@
-package main
+package day25
 
 import (
 	"fmt"
 	"os"
-	"slices"
 	"strings"
 )
 
+type schematic [5]int
+
 type day25 struct {
-	keys  [][]int
-	locks [][]int
+	keys  []schematic
+	locks []schematic
 }
 
-func parseSchematic(lines []string) []int {
-	heights := slices.Repeat([]int{-1}, 5)
+func parseSchematic(lines []string) schematic {
+	heights := schematic{-1, -1, -1, -1, -1}
 
 	for _, line := range lines {
 		for i, character := range line {
@@ -27,7 +28,7 @@ func parseSchematic(lines []string) []int {
 }
 
 func (d *day25) part1() {
-	doesNotOverlap := func(lock, key []int) bool {
+	doesNotOverlap := func(lock, key schematic) bool {
 		for i := range lock {
 			if lock[i]+key[i] > 5 {
 				return false
@@ -49,8 +50,8 @@ func (d *day25) part1() {
 	fmt.Println("ANSWER: fits:", fits)
 }
 
-func parse() *day25 {
-	data, err := os.ReadFile("input.txt")
+func parse(filename string) *day25 {
+	data, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Println("Error reading file")
 		return nil
@@ -58,8 +59,8 @@ func parse() *day25 {
 
 	lines := strings.Split(string(data), "\n")
 
-	var keys [][]int
-	var locks [][]int
+	var keys []schematic
+	var locks []schematic
 
 	for i := 0; i < len(lines); i = i + 8 {
 		if lines[i] == "#####" {
@@ -72,6 +73,6 @@ func parse() *day25 {
 	return &day25{keys, locks}
 }
 
-func main() {
-	parse().part1()
+func Solve(filename string) {
+	parse(filename).part1()
 }

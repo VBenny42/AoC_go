@@ -1,4 +1,4 @@
-package main
+package day17
 
 import (
 	"bufio"
@@ -160,8 +160,8 @@ func (d *day17) part2() {
 	fmt.Println("ANSWER2: quineValue:", d.findQuine())
 }
 
-func parse() *day17 {
-	file, err := os.Open("input.txt")
+func parse(filename string) *day17 {
+	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error opening file", err)
 		return nil
@@ -196,8 +196,8 @@ func parse() *day17 {
 	return &day17{registers, program}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

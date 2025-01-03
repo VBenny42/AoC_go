@@ -1,9 +1,9 @@
-package main
+package day20
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type (
@@ -78,15 +78,8 @@ func getCoord(g grid, c rune) coord {
 	return coord{}
 }
 
-func abs(x int) int {
-	if x < 0 {
-		return -x
-	}
-	return x
-}
-
 func manhattanDistance(c1, c2 coord) int {
-	return abs(c1.x-c2.x) + abs(c1.y-c2.y)
+	return utils.Abs(c1.x-c2.x) + utils.Abs(c1.y-c2.y)
 }
 
 func (d *day20) part1and2() {
@@ -113,24 +106,18 @@ func (d *day20) part1and2() {
 	fmt.Println("ANSWER2: twentyCheats:", twentyCheats)
 }
 
-func parse() *day20 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println("Error reading file:", err)
-		return nil
-	}
-	defer file.Close()
+func parse(filename string) *day20 {
+	data := utils.SplitLines(filename)
 
 	var grid grid
 
-	s := bufio.NewScanner(file)
-	for s.Scan() {
-		grid = append(grid, []rune(s.Text()))
+	for _, line := range data {
+		grid = append(grid, []rune(line))
 	}
 
 	return &day20{grid}
 }
 
-func main() {
-	parse().part1and2()
+func Solve(filename string) {
+	parse(filename).part1and2()
 }

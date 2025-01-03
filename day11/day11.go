@@ -1,4 +1,4 @@
-package main
+package day11
 
 import (
 	"bufio"
@@ -63,8 +63,8 @@ func (d *day11) part2() {
 	fmt.Println("ANSWER1: stones after 75 blinks:", d.blinkRecursive(75))
 }
 
-func parse() *day11 {
-	file, err := os.Open("input.txt")
+func parse(filename string) *day11 {
+	file, err := os.Open(filename)
 	if err != nil {
 		panic(err)
 	}
@@ -86,8 +86,8 @@ func parse() *day11 {
 	return &day11{stones}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

@@ -1,10 +1,10 @@
-package main
+package day06
 
 import (
 	"fmt"
-	"os"
-	"strings"
 	"sync"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type coord struct {
@@ -147,19 +147,13 @@ func (d *day06) part2Channels() {
 	fmt.Println("ANSWER2: number of positions that induce a loop:", sum)
 }
 
-func parse() *day06 {
-	file, err := os.ReadFile("input.txt")
-	if err != nil {
-		panic(err)
-	}
+func parse(filename string) *day06 {
+	data := utils.SplitLines(filename)
 
 	grid := grid{}
-
-	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
-
 	var start coord
 
-	for y, line := range lines {
+	for y, line := range data {
 		row := make([]visitedDirection, len(line))
 		for x, r := range line {
 			direction := visitedDirection{}
@@ -178,8 +172,8 @@ func parse() *day06 {
 	return &day06{grid, start, nil}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2Channels()
 }

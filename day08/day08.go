@@ -1,10 +1,9 @@
-package main
+package day08
 
 import (
 	"fmt"
-	"os"
-	"strings"
 
+	"github.com/VBenny42/AoC_go/utils"
 	"gonum.org/v1/gonum/stat/combin"
 )
 
@@ -106,18 +105,13 @@ func (d *day08) part2() {
 	fmt.Println("ANSWER2: unique antinodes:", len(d.antinodes))
 }
 
-func parse() *day08 {
-	file, err := os.ReadFile("input.txt")
-	if err != nil {
-		panic(err)
-	}
+func parse(filename string) *day08 {
+	data := utils.SplitLines(filename)
 
 	grid := grid{}
 	frequencies := map[rune]map[coord]bool{}
 
-	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
-
-	for y, line := range lines {
+	for y, line := range data {
 		grid = append(grid, []rune(line))
 		for x, r := range line {
 			if r != '.' {
@@ -134,8 +128,8 @@ func parse() *day08 {
 	return &day08{grid, frequencies, antinodes}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

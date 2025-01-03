@@ -1,4 +1,4 @@
-package main
+package day16
 
 import (
 	"container/heap"

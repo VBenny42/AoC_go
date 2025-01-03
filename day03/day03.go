@@ -1,11 +1,12 @@
-package main
+package day03
 
 import (
 	"fmt"
-	"os"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type day03 struct {
@@ -52,18 +53,15 @@ func (d *day03) part2() {
 }
 
 func parse(filename string) *day03 {
-	file, err := os.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
+	data := utils.SplitLines(filename)
 
-	joined := strings.Join(strings.Split(string(file), "\n"), "")
+	joined := strings.Join(data, "")
 
 	return &day03{line: joined}
 }
 
-func main() {
-	d := parse("input.txt")
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

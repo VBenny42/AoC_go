@@ -1,10 +1,11 @@
-package main
+package day14
 
 import (
-	"bufio"
 	"fmt"
 	"os"
 	"strconv"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type robot struct {
@@ -142,21 +143,15 @@ func (d *day14) part2() {
 	fmt.Println("ANSWER2: minSafetyFactor:", minSafetyFactor, "at iteration:", minIteration)
 }
 
-func parse() *day14 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-	defer file.Close()
+func parse(filename string) *day14 {
+	data := utils.SplitLines(filename)
 
 	grid := grid{}
-
-	s := bufio.NewScanner(file)
-	var posX, posY, velX, velY int
 	robots := []robot{}
-	for s.Scan() {
-		fmt.Sscanf(s.Text(), "p=%d,%d v=%d,%d", &posX, &posY, &velX, &velY)
+	var posX, posY, velX, velY int
+
+	for _, line := range data {
+		fmt.Sscanf(line, "p=%d,%d v=%d,%d", &posX, &posY, &velX, &velY)
 		robots = append(robots, robot{
 			position: struct{ x, y int }{posX, posY},
 			velocity: struct{ x, y int }{velX, velY},
@@ -167,8 +162,8 @@ func parse() *day14 {
 	return &day14{robots, grid}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

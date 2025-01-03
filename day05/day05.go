@@ -1,4 +1,4 @@
-package main
+package day05
 
 import (
 	"fmt"
@@ -85,6 +85,6 @@ func parse(filename string) *day05 {
 	return &day05{ruleset: ruleset, updates: updateArr}
 }
 
-func main() {
-	parse("input.txt").part1and2()
+func Solve(filename string) {
+	parse(filename).part1and2()
 }

@@ -1,10 +1,10 @@
-package main
+package day22
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"sync"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type day22 struct {
@@ -98,26 +98,18 @@ func (d *day22) part1and2Channels() {
 	fmt.Println("ANSWER2: maxSequence:", maxSequence)
 }
 
-func parse() *day22 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-	defer file.Close()
+func parse(filename string) *day22 {
+	data := utils.SplitLines(filename)
+	seeds := make([]int, len(data))
 
-	var seeds []int
-
-	s := bufio.NewScanner(file)
-	var n int
-	for s.Scan() {
-		fmt.Sscanf(s.Text(), "%d", &n)
-		seeds = append(seeds, n)
+	for i, d := range data {
+		fmt.Sscanf(d, "%d", &seeds[i])
 	}
+
 	return &day22{seeds}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1and2Channels()
 }

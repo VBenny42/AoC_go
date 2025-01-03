@@ -1,11 +1,11 @@
-package main
+package day07
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type equation struct {
@@ -95,19 +95,16 @@ func (d *day07) part2() {
 	fmt.Println("ANSWER1: sum of true equations with concat:", sum)
 }
 
-func parse() *day07 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+func parse(filename string) *day07 {
+	data := utils.SplitLines(filename)
 
-	s := bufio.NewScanner(file)
 	equations := []equation{}
 	var equation equation
 
-	for s.Scan() {
-		line := strings.Split(s.Text(), ":")
+	var err error
+
+	for _, line := range data {
+		line := strings.Split(line, ":")
 		equation.desired, err = strconv.Atoi(line[0])
 		if err != nil {
 			continue
@@ -128,8 +125,8 @@ func parse() *day07 {
 	return &day07{equations}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

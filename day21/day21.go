@@ -1,9 +1,9 @@
-package main
+package day21
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type memoKey struct {
@@ -89,24 +89,17 @@ func (d *day21) part2() {
 	fmt.Println("ANSWER2: 25 robots shortestSequenceLength:", d.getShortestSequenceLength(25))
 }
 
-func parse() *day21 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		println("Error: ", err)
-		return nil
-	}
-	defer file.Close()
+func parse(filename string) *day21 {
+	data := utils.SplitLines(filename)
 
-	s := bufio.NewScanner(file)
-
-	codes := make([]line, 0)
+	codes := make([]line, len(data))
 
 	var n int
 
-	for s.Scan() {
-		code := s.Text()
+	for i, row := range data {
+		code := row
 		fmt.Sscanf(code, "%d", &n)
-		codes = append(codes, line{code, n})
+		codes[i] = line{code, n}
 	}
 
 	memo := make(map[memoKey]int)
@@ -114,8 +107,8 @@ func parse() *day21 {
 	return &day21{memo, codes}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

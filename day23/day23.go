@@ -1,14 +1,13 @@
-package main
+package day23
 
 import (
-	"bufio"
 	"fmt"
 	"log"
-	"os"
 	"sort"
 	"strings"
 
 	"github.com/Tom-Johnston/mamba/graph"
+	"github.com/VBenny42/AoC_go/utils"
 	"gonum.org/v1/gonum/stat/combin"
 )
 
@@ -17,26 +16,18 @@ type day23 struct {
 	reverseComputers map[int]string
 }
 
-func parse() *day23 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		log.Fatalf("Error reading file: %s", err)
-	}
-	defer file.Close()
-
-	s := bufio.NewScanner(file)
+func parse(filename string) *day23 {
+	data := utils.SplitLines(filename)
 
 	computers := make(map[string]int)
 	reverseComputers := make(map[int]string)
 
 	id := 0
 
-	edges := make([][]int, 0)
+	edges := make([][]int, len(data))
+	var u, v string
 
-	for s.Scan() {
-		line := s.Text()
-
-		var u, v string
+	for i, line := range data {
 		n, err := fmt.Sscanf(line, "%2s-%2s", &u, &v)
 		if err != nil || n != 2 {
 			log.Fatalf("Error scanning line: %s, %d", line, n)
@@ -52,7 +43,7 @@ func parse() *day23 {
 			reverseComputers[id] = v
 			id++
 		}
-		edges = append(edges, []int{computers[u], computers[v]})
+		edges[i] = []int{computers[u], computers[v]}
 	}
 
 	g := newSimpleEditableGraph(len(computers))
@@ -135,6 +126,6 @@ func (d *day23) part1and2() {
 	fmt.Println("ANSWER2: maxCliqueComputers:", strings.Join(maxCliqueComputers, ","))
 }
 
-func main() {
-	parse().part1and2()
+func Solve(filename string) {
+	parse(filename).part1and2()
 }

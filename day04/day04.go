@@ -1,9 +1,10 @@
-package main
+package day04
 
 import (
 	"fmt"
-	"os"
 	"strings"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type (
@@ -130,19 +131,14 @@ func (d *day04) part2() {
 }
 
 func parse(filename string) *day04 {
-	file, err := os.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
+	data := utils.SplitLines(filename)
 
 	grid := grid{}
-
-	lines := strings.Split(strings.TrimSpace(string(file)), "\n")
 
 	aCoords := []coord{}
 	xCoords := []coord{}
 
-	for y, line := range lines {
+	for y, line := range data {
 		row := []rune(line)
 		for x, r := range line {
 			if r == 'A' {
@@ -158,8 +154,8 @@ func parse(filename string) *day04 {
 	return &day04{grid, aCoords, xCoords}
 }
 
-func main() {
-	d := parse("input.txt")
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

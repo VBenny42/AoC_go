@@ -1,4 +1,4 @@
-package main
+package day21
 
 var directionalKeypadTransitions = map[string]map[string][]string{
 	"^": {

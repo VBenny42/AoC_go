@@ -1,9 +1,9 @@
-package main
+package day13
 
 import (
 	"fmt"
-	"os"
-	"strings"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type point struct {
@@ -63,31 +63,25 @@ func (d *day13) part2() {
 	fmt.Println("ANSWER2: minTokens:", minTokens)
 }
 
-func parse() *day13 {
-	file, err := os.ReadFile("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-
-	lines := strings.Split(strings.Trim(string(file), "\n"), "\n")
+func parse(filename string) *day13 {
+	data := utils.SplitLines(filename)
 
 	machines := []machine{}
 
 	var m machine
 
-	for i := 0; i < len(lines); i = i + 4 {
-		fmt.Sscanf(lines[i], "Button A: X+%d, Y+%d", &m.a.x, &m.a.y)
-		fmt.Sscanf(lines[i+1], "Button B: X+%d, Y+%d", &m.b.x, &m.b.y)
-		fmt.Sscanf(lines[i+2], "Prize: X=%d, Y=%d", &m.prize.x, &m.prize.y)
+	for i := 0; i < len(data); i = i + 4 {
+		fmt.Sscanf(data[i], "Button A: X+%d, Y+%d", &m.a.x, &m.a.y)
+		fmt.Sscanf(data[i+1], "Button B: X+%d, Y+%d", &m.b.x, &m.b.y)
+		fmt.Sscanf(data[i+2], "Prize: X=%d, Y=%d", &m.prize.x, &m.prize.y)
 		machines = append(machines, m)
 	}
 
 	return &day13{machines}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

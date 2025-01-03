@@ -1,4 +1,4 @@
-package main
+package day19
 
 import (
 	"bufio"
@@ -49,8 +49,8 @@ func (d *day19) part1and2() {
 	fmt.Println("ANSWER2: allCombos:", allCombos)
 }
 
-func parse() *day19 {
-	file, err := os.Open("input.txt")
+func parse(filename string) *day19 {
+	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("File reading error", err)
 		return nil
@@ -73,6 +73,6 @@ func parse() *day19 {
 	return &day19{towels, designs, cache}
 }
 
-func main() {
-	parse().part1and2()
+func Solve(filename string) {
+	parse(filename).part1and2()
 }

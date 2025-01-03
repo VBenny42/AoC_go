@@ -1,10 +1,10 @@
-package main
+package day16
 
 import (
-	"bufio"
 	"fmt"
 	"math"
-	"os"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type day16 struct {
@@ -111,19 +111,13 @@ func (d *day16) part1and2() {
 	fmt.Println("ANSWER2: All tiles on paths", len(allTiles))
 }
 
-func parse() *day16 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println("Failed to open file", err)
-		return nil
-	}
-	defer file.Close()
+func parse(filename string) *day16 {
+	data := utils.SplitLines(filename)
 
 	var grid grid
 
-	s := bufio.NewScanner(file)
-	for s.Scan() {
-		grid = append(grid, []rune(s.Text()))
+	for _, line := range data {
+		grid = append(grid, []rune(line))
 	}
 
 	height, width := len(grid), len(grid[0])
@@ -131,6 +125,6 @@ func parse() *day16 {
 	return &day16{grid, height, width}
 }
 
-func main() {
-	parse().part1and2()
+func Solve(filename string) {
+	parse(filename).part1and2()
 }

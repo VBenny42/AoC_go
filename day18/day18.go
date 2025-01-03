@@ -1,10 +1,9 @@
-package main
+package day18
 
 import (
-	"bufio"
-	"errors"
 	"fmt"
-	"os"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type position struct {
@@ -60,7 +59,7 @@ func bfs(grid [][]bool) (int, error) {
 		}
 	}
 
-	return 0, errors.New("No path found")
+	return 0, fmt.Errorf("No path found")
 }
 
 func (d *day18) part1and2() {
@@ -85,32 +84,26 @@ func (d *day18) part1and2() {
 	}
 }
 
-func parse() *day18 {
+func parse(filename string) *day18 {
 	grid := make([][]bool, m)
 
 	for i := 0; i < m; i++ {
 		grid[i] = make([]bool, n)
 	}
 
-	file, err := os.Open("input.txt")
-	if err != nil {
-		fmt.Println(err)
-		return nil
-	}
-	defer file.Close()
-
 	obstacles := make([]position, 0)
 
-	scanner := bufio.NewScanner(file)
+	data := utils.SplitLines(filename)
+
 	var pos position
-	for scanner.Scan() {
-		fmt.Sscanf(scanner.Text(), "%d,%d", &pos.x, &pos.y)
+	for _, line := range data {
+		fmt.Sscanf(line, "%d,%d", &pos.x, &pos.y)
 		obstacles = append(obstacles, pos)
 	}
 
 	return &day18{grid, obstacles}
 }
 
-func main() {
-	parse().part1and2()
+func Solve(filename string) {
+	parse(filename).part1and2()
 }

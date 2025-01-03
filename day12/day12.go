@@ -1,9 +1,9 @@
-package main
+package day12
 
 import (
-	"bufio"
 	"fmt"
-	"os"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type (
@@ -174,19 +174,12 @@ func (d *day12) part2() {
 	fmt.Println("ANSWER2: price:", price)
 }
 
-func parse() *day12 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
-
-	s := bufio.NewScanner(file)
-
+func parse(filename string) *day12 {
+	data := utils.SplitLines(filename)
 	grid := [][]rune{}
 
-	for s.Scan() {
-		grid = append(grid, []rune(s.Text()))
+	for _, row := range data {
+		grid = append(grid, []rune(row))
 	}
 
 	regions, notNeighbors := buildRegions(grid)
@@ -194,8 +187,8 @@ func parse() *day12 {
 	return &day12{regions, notNeighbors}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

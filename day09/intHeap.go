@@ -1,4 +1,4 @@
-package main
+package day09
 
 // https://cs.opensource.google/go/go/+/refs/tags/go1.16.6:src/container/heap/example_intheap_test.go
 

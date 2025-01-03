@@ -1,10 +1,10 @@
-package main
+package day10
 
 import (
-	"bufio"
 	"fmt"
-	"os"
 	"strconv"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type (
@@ -127,18 +127,12 @@ func (d *day10) part2() {
 	fmt.Println("ANSWER2: score:", score)
 }
 
-func parse() *day10 {
-	file, err := os.Open("input.txt")
-	if err != nil {
-		panic(err)
-	}
-	defer file.Close()
+func parse(filename string) *day10 {
+	data := utils.SplitLines(filename)
 
 	grid := grid{}
 
-	scanner := bufio.NewScanner(file)
-	for scanner.Scan() {
-		line := scanner.Text()
+	for _, line := range data {
 		row := []int{}
 		for _, c := range line {
 			n, err := strconv.Atoi(string(c))
@@ -167,8 +161,8 @@ func parse() *day10 {
 	return &day10{grid, trailheads, ninePositions}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

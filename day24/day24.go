@@ -1,4 +1,4 @@
-package main
+package day24
 
 import (
 	"fmt"
@@ -160,8 +160,8 @@ func (d *day24) part2() {
 	fmt.Println("ANSWER2: swaps:", strings.Join(swaps, ","))
 }
 
-func parse() *day24 {
-	file, err := os.ReadFile("input.txt")
+func parse(filename string) *day24 {
+	file, err := os.ReadFile(filename)
 	if err != nil {
 		fmt.Println("File reading error", err)
 		return nil
@@ -194,8 +194,8 @@ func parse() *day24 {
 	}
 }
 
-func main() {
-	d := parse()
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

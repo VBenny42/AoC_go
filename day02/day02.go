@@ -1,10 +1,11 @@
-package main
+package day02
 
 import (
 	"fmt"
-	"os"
 	"strconv"
 	"strings"
+
+	"github.com/VBenny42/AoC_go/utils"
 )
 
 type day02 struct {
@@ -15,13 +16,6 @@ const (
 	increasing = 1
 	decreasing = -1
 )
-
-func abs(n int) int {
-	if n < 0 {
-		return -n
-	}
-	return n
-}
 
 func isValidReport(report []int) bool {
 	var direction int
@@ -38,7 +32,7 @@ func isValidReport(report []int) bool {
 			}
 		}
 
-		if abs(current-next) < 1 || abs(current-next) > 3 {
+		if utils.Abs(current-next) < 1 || utils.Abs(current-next) > 3 {
 			return false
 		}
 		if direction == increasing && current > next {
@@ -90,16 +84,13 @@ func (d *day02) part2() {
 }
 
 func parse(filename string) *day02 {
-	file, err := os.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
+	data := utils.SplitLines(filename)
 
-	linesString := strings.Split(strings.TrimSpace(string(file)), "\n")
+	lines := make([][]int, len(data))
 
-	lines := make([][]int, len(linesString))
+	var err error
 
-	for i, line := range linesString {
+	for i, line := range data {
 		numbers := strings.Split(line, " ")
 		lines[i] = make([]int, len(numbers))
 		for j, number := range numbers {
@@ -113,8 +104,8 @@ func parse(filename string) *day02 {
 	return &day02{lines}
 }
 
-func main() {
-	d := parse("input.txt")
+func Solve(filename string) {
+	d := parse(filename)
 	d.part1()
 	d.part2()
 }

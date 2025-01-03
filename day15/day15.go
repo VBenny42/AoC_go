@@ -1,4 +1,4 @@
-package main
+package day15
 
 import (
 	"bufio"
@@ -316,8 +316,8 @@ func (d *day15) part2() {
 	fmt.Println("ANSWER2: sumGpsCoordinates:", sumGpsCoordinates)
 }
 
-func parse() *day15 {
-	file, err := os.Open("input.txt")
+func parse(filename string) *day15 {
+	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error opening file", err)
 		return nil
@@ -362,7 +362,7 @@ func (d *day15) printGrid() {
 	}
 }
 
-func main() {
-	parse().part1()
-	parse().part2()
+func Solve(filename string) {
+	parse(filename).part1()
+	parse(filename).part2()
 }

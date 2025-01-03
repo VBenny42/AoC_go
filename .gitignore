@@ -27,3 +27,4 @@ go.work
 
 # Exclude .go source files
 !*.go
+AoC_go
