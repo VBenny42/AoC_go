@@ -1,3 +1,5 @@
+// Package AoC_go is a simple command line tool to run Advent of Code 2024 solutions
+// Author: Vinesh Benny
 package main
 
 import (
