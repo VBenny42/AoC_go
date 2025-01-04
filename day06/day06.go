@@ -22,19 +22,14 @@ type day06 struct {
 }
 
 const (
-	up    = 0
-	right = 1
-	down  = 2
-	left  = 3
-	box   = 4
+	up = iota
+	right
+	down
+	left
+	box
 )
 
-var rotateMap = map[int]int{
-	up:    right,
-	right: down,
-	down:  left,
-	left:  up,
-}
+var rotations = [4]int{right, down, left, up}
 
 func (g grid) getNextPosition(c coord, d int) (coord, error) {
 	m, n := len(g[0]), len(g)
@@ -75,7 +70,7 @@ func (g grid) markVisited(c coord) {
 		}
 		g[current.y][current.x][currentDirection] = true
 		if g[next.y][next.x][box] {
-			currentDirection = rotateMap[currentDirection]
+			currentDirection = rotations[currentDirection]
 			continue
 		}
 		current = next
@@ -83,24 +78,31 @@ func (g grid) markVisited(c coord) {
 }
 
 func (d *day06) doesInduceLoop(obstruction coord) bool {
-	visited := make(map[coord][4]bool)
+	height := len(d.grid)
+	width := len(d.grid[0])
+	visited := make([][]byte, height)
+	for i := range visited {
+		visited[i] = make([]byte, width)
+	}
+
 	currentDirection := up
 	current := d.start
+	var dirBit byte
+
 	for {
 		next, err := d.grid.getNextPosition(current, currentDirection)
 		if err != nil {
 			return false
 		}
 		if next == obstruction || d.grid[next.y][next.x][box] {
-			currentDirection = rotateMap[currentDirection]
+			currentDirection = rotations[currentDirection]
 			continue
 		}
-		if visited[next][currentDirection] {
+		dirBit = byte(1 << currentDirection)
+		if visited[next.y][next.x]&dirBit != 0 {
 			return true
 		}
-		directions := visited[next]
-		directions[currentDirection] = true
-		visited[next] = directions
+		visited[next.y][next.x] |= dirBit
 		current = next
 	}
 }

@@ -13,14 +13,16 @@ type day16 struct {
 	width  int
 }
 
+var opposites = map[direction]direction{
+	up:    down,
+	down:  up,
+	left:  right,
+	right: left,
+}
+
 func (d *day16) neighborsFn(cell state) []state {
-	opposites := map[direction]direction{
-		up:    down,
-		down:  up,
-		left:  right,
-		right: left,
-	}
-	neighbors := make([]state, 0)
+	neighbors := make([]state, 3)
+	i := 0
 	for _, d := range []direction{up, left, down, right} {
 		if d == cell.d {
 			continue
@@ -29,25 +31,26 @@ func (d *day16) neighborsFn(cell state) []state {
 		if d == opposites[cell.d] {
 			continue
 		}
-		neighbors = append(neighbors, state{x: cell.x, y: cell.y, d: d})
+		neighbors[i] = state{x: cell.x, y: cell.y, d: d}
+		i++
 	}
 
 	switch cell.d {
 	case up:
 		if cell.y > 0 && d.grid[cell.y-1][cell.x] != '#' {
-			neighbors = append(neighbors, state{x: cell.x, y: cell.y - 1, d: cell.d})
+			neighbors[2] = state{x: cell.x, y: cell.y - 1, d: cell.d}
 		}
 	case left:
 		if cell.x > 0 && d.grid[cell.y][cell.x-1] != '#' {
-			neighbors = append(neighbors, state{x: cell.x - 1, y: cell.y, d: cell.d})
+			neighbors[2] = state{x: cell.x - 1, y: cell.y, d: cell.d}
 		}
 	case down:
 		if cell.y < d.height-1 && d.grid[cell.y+1][cell.x] != '#' {
-			neighbors = append(neighbors, state{x: cell.x, y: cell.y + 1, d: cell.d})
+			neighbors[2] = state{x: cell.x, y: cell.y + 1, d: cell.d}
 		}
 	case right:
 		if cell.x < d.width-1 && d.grid[cell.y][cell.x+1] != '#' {
-			neighbors = append(neighbors, state{x: cell.x + 1, y: cell.y, d: cell.d})
+			neighbors[2] = state{x: cell.x + 1, y: cell.y, d: cell.d}
 		}
 	}
 

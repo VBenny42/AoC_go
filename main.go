@@ -5,6 +5,8 @@ package main
 import (
 	"flag"
 	"fmt"
+	"os"
+	"runtime/pprof"
 
 	"github.com/VBenny42/AoC_go/solutions"
 )
@@ -14,12 +16,23 @@ func main() {
 	day := flag.Int("day", 0, validString)
 	all := flag.Bool("all", false, "Run all days")
 	help := flag.Bool("help", false, "Show help")
+	profile := flag.String("profile", "", "Write profile to file")
 
 	flag.Parse()
 
 	if *help {
 		flag.PrintDefaults()
 		return
+	}
+
+	if *profile != "" {
+		f, err := os.Create(*profile)
+		if err != nil {
+			fmt.Println("Error creating profile file:", err)
+			return
+		}
+		pprof.StartCPUProfile(f)
+		defer pprof.StopCPUProfile()
 	}
 
 	if *all {
