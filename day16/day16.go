@@ -14,9 +14,19 @@ type day16 struct {
 }
 
 func (d *day16) neighborsFn(cell state) []state {
+	opposites := map[direction]direction{
+		up:    down,
+		down:  up,
+		left:  right,
+		right: left,
+	}
 	neighbors := make([]state, 0)
 	for _, d := range []direction{up, left, down, right} {
 		if d == cell.d {
+			continue
+		}
+		// Don't ever go backwards
+		if d == opposites[cell.d] {
 			continue
 		}
 		neighbors = append(neighbors, state{x: cell.x, y: cell.y, d: d})
@@ -40,6 +50,7 @@ func (d *day16) neighborsFn(cell state) []state {
 			neighbors = append(neighbors, state{x: cell.x + 1, y: cell.y, d: cell.d})
 		}
 	}
+
 	return neighbors
 }
 
@@ -48,25 +59,26 @@ func costFn(a, b state) int {
 		return 1
 	}
 	if a.d != b.d {
-		if (a.d == up || a.d == down) && (b.d == up || b.d == down) {
-			return 2000
-		}
-		if (a.d == left || a.d == right) && (b.d == left || b.d == right) {
-			return 2000
-		}
+		// Shouldn't be passed in, pruning from neighborsFn should prevent this
+		// if (a.d == up || a.d == down) && (b.d == up || b.d == down) {
+		// 	return 2000
+		// }
+		// if (a.d == left || a.d == right) && (b.d == left || b.d == right) {
+		// 	return 2000
+		// }
 		return 1000
 	}
 	return 0
 }
 
-func (d *day16) part1and2() {
+func (d *day16) Part1and2() (int, int) {
 	var start state
 	ends := make([]state, 0)
 
 	for y := 0; y < d.height; y++ {
 		for x := 0; x < d.width; x++ {
 			if d.grid[y][x] == 'S' {
-				start = state{x: x, y: y, d: up}
+				start = state{x: x, y: y, d: right}
 			}
 			if d.grid[y][x] == 'E' {
 				ends = append(ends, state{x: x, y: y, d: up})
@@ -79,7 +91,7 @@ func (d *day16) part1and2() {
 
 	if start == (state{}) || len(ends) == 0 {
 		fmt.Println("Invalid input")
-		return
+		return -1, -1
 	}
 
 	dijk := dijkstra{
@@ -93,6 +105,7 @@ func (d *day16) part1and2() {
 
 	minCost := dijk.maxCost
 	dijk.findPath(start)
+
 	var minEnd state
 	for _, end := range ends {
 		cost := dijk.getCost(end)
@@ -107,11 +120,10 @@ func (d *day16) part1and2() {
 		allTiles[struct{ x, y int }{x: node.x, y: node.y}] = struct{}{}
 	}
 
-	fmt.Println("ANSWER1: Least cost path:", minCost)
-	fmt.Println("ANSWER2: All tiles on paths", len(allTiles))
+	return minCost, len(allTiles)
 }
 
-func parse(filename string) *day16 {
+func Parse(filename string) *day16 {
 	data := utils.SplitLines(filename)
 
 	var grid grid
@@ -126,5 +138,7 @@ func parse(filename string) *day16 {
 }
 
 func Solve(filename string) {
-	parse(filename).part1and2()
+	minCost, allTiles := Parse(filename).Part1and2()
+	fmt.Println("ANSWER1: Least cost path:", minCost)
+	fmt.Println("ANSWER2: All tiles on paths", allTiles)
 }

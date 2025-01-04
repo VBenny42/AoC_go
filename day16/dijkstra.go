@@ -31,9 +31,9 @@ type dijkstra struct {
 }
 
 func (d *dijkstra) findPath(start state) {
-	queue := make(priorityHeap, 0)
+	queue := priorityHeap{&item{cost: 0, state: start}}
 
-	heap.Push(&queue, &item{cost: 0, state: start})
+	heap.Init(&queue)
 	d.costs[start] = d.minCost
 	d.previous[start] = make([]state, 0)
 
