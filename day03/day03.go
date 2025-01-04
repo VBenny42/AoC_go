@@ -13,7 +13,7 @@ type day03 struct {
 	line string
 }
 
-func (d *day03) part1() {
+func (d *day03) Part1() int {
 	re := regexp.MustCompile(`mul\((\d{1,3}),(\d{1,3})\)`)
 	matches := re.FindAllStringSubmatch(d.line, -1)
 
@@ -26,10 +26,10 @@ func (d *day03) part1() {
 		sum += a * b
 	}
 
-	fmt.Println("ANSWER1: sum:", sum)
+	return sum
 }
 
-func (d *day03) part2() {
+func (d *day03) Part2() int {
 	re := regexp.MustCompile(`mul\((\d{1,3},\d{1,3})\)|(do\(\))|(don't\(\))`)
 	matches := re.FindAllStringSubmatch(d.line, -1)
 
@@ -49,10 +49,10 @@ func (d *day03) part2() {
 		}
 	}
 
-	fmt.Println("ANSWER2: sum with conditionals:", sum)
+	return sum
 }
 
-func parse(filename string) *day03 {
+func Parse(filename string) *day03 {
 	data := utils.SplitLines(filename)
 
 	joined := strings.Join(data, "")
@@ -61,7 +61,7 @@ func parse(filename string) *day03 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: sum:", d.Part1())
+	fmt.Println("ANSWER2: sum with conditionals:", d.Part2())
 }

@@ -112,17 +112,17 @@ func (g *grid) getSafetyFactor() int {
 	return safetyFactor
 }
 
-func (d *day14) part1() {
+func (d *day14) Part1() int {
 	for j := 0; j < 100; j++ {
 		for i := range d.robots {
 			d.moveRobot(&d.robots[i])
 		}
 	}
 
-	fmt.Println("ANSWER1: safetyFactor:", d.grid.getSafetyFactor())
+	return d.grid.getSafetyFactor()
 }
 
-func (d *day14) part2() {
+func (d *day14) Part2() int {
 	minSafetyFactor, minIteration := 1<<31-1, 0
 	for i := 100; i < 10000; i++ {
 		for j := range d.robots {
@@ -140,10 +140,10 @@ func (d *day14) part2() {
 		}
 	}
 
-	fmt.Println("ANSWER2: minSafetyFactor:", minSafetyFactor, "at iteration:", minIteration)
+	return minIteration
 }
 
-func parse(filename string) *day14 {
+func Parse(filename string) *day14 {
 	data := utils.SplitLines(filename)
 
 	grid := grid{}
@@ -163,7 +163,7 @@ func parse(filename string) *day14 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: safetyFactor:", d.Part1())
+	fmt.Println("ANSWER2: minSafetyFactor is at iteration:", d.Part2()+1)
 }

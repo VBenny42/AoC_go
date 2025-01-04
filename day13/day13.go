@@ -36,7 +36,7 @@ func (m *machine) cheapestCombination() (int, error) {
 	return 3*a + b, nil
 }
 
-func (d *day13) part1() {
+func (d *day13) Part1() int {
 	minTokens := 0
 	for _, m := range d.machines {
 		tokens, err := m.cheapestCombination()
@@ -45,10 +45,10 @@ func (d *day13) part1() {
 		}
 		minTokens += tokens
 	}
-	fmt.Println("ANSWER1: minTokens:", minTokens)
+	return minTokens
 }
 
-func (d *day13) part2() {
+func (d *day13) Part2() int {
 	minTokens := 0
 	const addition = 10000000000000
 	for _, m := range d.machines {
@@ -60,10 +60,10 @@ func (d *day13) part2() {
 		}
 		minTokens += tokens
 	}
-	fmt.Println("ANSWER2: minTokens:", minTokens)
+	return minTokens
 }
 
-func parse(filename string) *day13 {
+func Parse(filename string) *day13 {
 	data := utils.SplitLines(filename)
 
 	machines := []machine{}
@@ -81,7 +81,7 @@ func parse(filename string) *day13 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: minTokens:", d.Part1())
+	fmt.Println("ANSWER2: minTokens:", d.Part2())
 }

@@ -73,7 +73,7 @@ func isValidEquationWithConcat(eq equation) bool {
 	return mult || add || concat
 }
 
-func (d *day07) part1() {
+func (d *day07) Part1() int {
 	sum := 0
 	for _, eq := range d.equations {
 		if isValidEquation(eq) {
@@ -81,10 +81,10 @@ func (d *day07) part1() {
 		}
 	}
 
-	fmt.Println("ANSWER1: sum of true equations:", sum)
+	return sum
 }
 
-func (d *day07) part2() {
+func (d *day07) Part2() int {
 	sum := 0
 	for _, eq := range d.equations {
 		if isValidEquationWithConcat(eq) {
@@ -92,10 +92,10 @@ func (d *day07) part2() {
 		}
 	}
 
-	fmt.Println("ANSWER1: sum of true equations with concat:", sum)
+	return sum
 }
 
-func parse(filename string) *day07 {
+func Parse(filename string) *day07 {
 	data := utils.SplitLines(filename)
 
 	equations := []equation{}
@@ -107,7 +107,7 @@ func parse(filename string) *day07 {
 		line := strings.Split(line, ":")
 		equation.desired, err = strconv.Atoi(line[0])
 		if err != nil {
-			continue
+			panic(err)
 		}
 
 		numbers := strings.Split(line[1], " ")[1:]
@@ -115,7 +115,7 @@ func parse(filename string) *day07 {
 		for i, n := range numbers {
 			number, err := strconv.Atoi(n)
 			if err != nil {
-				continue
+				panic(err)
 			}
 			equation.numbers[i] = number
 		}
@@ -126,7 +126,7 @@ func parse(filename string) *day07 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: sum of true equations:", d.Part1())
+	fmt.Println("ANSWER2: sum of true equations with concat:", d.Part2())
 }

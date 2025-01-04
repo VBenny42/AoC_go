@@ -31,7 +31,7 @@ func (d *day05) reordering(update []int) []int {
 	return updated
 }
 
-func (d *day05) part1and2() {
+func (d *day05) Part1and2() (int, int) {
 	sumCorrect := 0
 	sumReordered := 0
 	for _, update := range d.updates {
@@ -42,11 +42,11 @@ func (d *day05) part1and2() {
 			sumReordered += validOrdering[(len(update)-1)/2]
 		}
 	}
-	fmt.Println("ANSWER1: sum of correct updates:", sumCorrect)
-	fmt.Println("ANSWER2: sum of reordered updates:", sumReordered)
+
+	return sumCorrect, sumReordered
 }
 
-func parse(filename string) *day05 {
+func Parse(filename string) *day05 {
 	file, err := os.ReadFile(filename)
 	if err != nil {
 		panic(err)
@@ -86,5 +86,8 @@ func parse(filename string) *day05 {
 }
 
 func Solve(filename string) {
-	parse(filename).part1and2()
+	sumCorrect, sumReordered := Parse(filename).Part1and2()
+
+	fmt.Println("ANSWER1: sum of correct updates:", sumCorrect)
+	fmt.Println("ANSWER2: sum of reordered updates:", sumReordered)
 }

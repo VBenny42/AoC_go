@@ -153,7 +153,7 @@ func countSides(region map[coord]struct{}) int {
 	return sideCount
 }
 
-func (d *day12) part1() {
+func (d *day12) Part1() int {
 	price := 0
 	for _, region := range d.regions {
 		for _, r := range region {
@@ -161,20 +161,20 @@ func (d *day12) part1() {
 		}
 	}
 
-	fmt.Println("ANSWER1: price:", price)
+	return price
 }
 
-func (d *day12) part2() {
+func (d *day12) Part2() int {
 	price := 0
 	for _, region := range d.regions {
 		for _, r := range region {
 			price += countSides(r) * len(r)
 		}
 	}
-	fmt.Println("ANSWER2: price:", price)
+	return price
 }
 
-func parse(filename string) *day12 {
+func Parse(filename string) *day12 {
 	data := utils.SplitLines(filename)
 	grid := [][]rune{}
 
@@ -188,7 +188,7 @@ func parse(filename string) *day12 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: price:", d.Part1())
+	fmt.Println("ANSWER2: price:", d.Part2())
 }

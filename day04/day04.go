@@ -108,7 +108,7 @@ func (d *day04) isXMasMatch(c coord) bool {
 			(upRightValue == 'S' && downLeftValue == 'M'))
 }
 
-func (d *day04) part1() {
+func (d *day04) Part1() int {
 	sum := 0
 	for _, xCoord := range d.xCoords {
 		for dir := up; dir <= downRight; dir++ {
@@ -117,20 +117,20 @@ func (d *day04) part1() {
 			}
 		}
 	}
-	fmt.Println("ANSWER1: xmas matches:", sum)
+	return sum
 }
 
-func (d *day04) part2() {
+func (d *day04) Part2() int {
 	sum := 0
 	for _, aCoord := range d.aCoords {
 		if d.isXMasMatch(aCoord) {
 			sum++
 		}
 	}
-	fmt.Println("ANSWER2: x-mas matches:", sum)
+	return sum
 }
 
-func parse(filename string) *day04 {
+func Parse(filename string) *day04 {
 	data := utils.SplitLines(filename)
 
 	grid := grid{}
@@ -155,7 +155,7 @@ func parse(filename string) *day04 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: xmas matches:", d.Part1())
+	fmt.Println("ANSWER2: x-mas matches:", d.Part2())
 }

@@ -89,23 +89,23 @@ func (d *day08) findAllAntinodes(frequency map[coord]bool) {
 	}
 }
 
-func (d *day08) part1() {
+func (d *day08) Part1() int {
 	for _, v := range d.frequencies {
 		d.findCloseAntinodes(v)
 	}
 
-	fmt.Println("ANSWER1: unique antinodes:", len(d.antinodes))
+	return len(d.antinodes)
 }
 
-func (d *day08) part2() {
+func (d *day08) Part2() int {
 	for _, v := range d.frequencies {
 		d.findAllAntinodes(v)
 	}
 
-	fmt.Println("ANSWER2: unique antinodes:", len(d.antinodes))
+	return len(d.antinodes)
 }
 
-func parse(filename string) *day08 {
+func Parse(filename string) *day08 {
 	data := utils.SplitLines(filename)
 
 	grid := grid{}
@@ -129,7 +129,7 @@ func parse(filename string) *day08 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: unique antinodes:", d.Part1())
+	fmt.Println("ANSWER2: unique antinodes:", d.Part2())
 }

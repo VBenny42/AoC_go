@@ -276,11 +276,11 @@ func (c coord) gpsCoordinate() int {
 	return c.y*100 + c.x
 }
 
-func (d *day15) part1() {
+func (d *day15) Part1() int {
 	robot, err := d.findRobot()
 	if err != nil {
 		fmt.Println("Error finding robot", err)
-		return
+		return -1
 	}
 
 	for _, move := range d.movements {
@@ -292,16 +292,16 @@ func (d *day15) part1() {
 		sumGpsCoordinates += box.gpsCoordinate()
 	}
 
-	fmt.Println("ANSWER1: sumGpsCoordinates:", sumGpsCoordinates)
+	return sumGpsCoordinates
 }
 
-func (d *day15) part2() {
+func (d *day15) Part2() int {
 	d.scaleGrid()
 
 	robot, err := d.findRobot()
 	if err != nil {
 		fmt.Println("Error finding robot", err)
-		return
+		return -1
 	}
 
 	for _, move := range d.movements {
@@ -313,10 +313,10 @@ func (d *day15) part2() {
 		sumGpsCoordinates += box.gpsCoordinate()
 	}
 
-	fmt.Println("ANSWER2: sumGpsCoordinates:", sumGpsCoordinates)
+	return sumGpsCoordinates
 }
 
-func parse(filename string) *day15 {
+func Parse(filename string) *day15 {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error opening file", err)
@@ -363,6 +363,6 @@ func (d *day15) printGrid() {
 }
 
 func Solve(filename string) {
-	parse(filename).part1()
-	parse(filename).part2()
+	fmt.Println("ANSWER1: sumGpsCoordinates:", Parse(filename).Part1())
+	fmt.Println("ANSWER2: sumGpsCoordinates:", Parse(filename).Part2())
 }

@@ -139,21 +139,21 @@ func checksum(diskmap []int) int {
 	return checksum
 }
 
-func (d *day09) part1() {
+func (d *day09) Part1() int {
 	diskmap := d.convert()
 	diskmap = makeContiguous(diskmap)
 
-	fmt.Println("ANSWER1: checksum:", checksum(diskmap))
+	return checksum(diskmap)
 }
 
-func (d *day09) part2() {
+func (d *day09) Part2() int {
 	diskmap, heaps := d.convertWithHeaps()
 	diskmap = makeContiguousHeaps(diskmap, heaps)
 
-	fmt.Println("ANSWER2: checksum:", checksum(diskmap))
+	return checksum(diskmap)
 }
 
-func parse(filename string) *day09 {
+func Parse(filename string) *day09 {
 	data := utils.JoinFile(filename)
 
 	diskmap := make([]int, len(data))
@@ -167,7 +167,7 @@ func parse(filename string) *day09 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: checksum:", d.Part1())
+	fmt.Println("ANSWER2: checksum:", d.Part2())
 }

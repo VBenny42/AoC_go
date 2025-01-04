@@ -14,17 +14,17 @@ type day01 struct {
 	list2 []int
 }
 
-func (d *day01) part1() {
+func (d *day01) Part1() int {
 	diffSum := 0
 
 	for i := 0; i < len(d.list1); i++ {
 		diffSum += utils.Abs(d.list1[i] - d.list2[i])
 	}
 
-	fmt.Println("ANSWER1: diffSum:", diffSum)
+	return diffSum
 }
 
-func (d *day01) part2() {
+func (d *day01) Part2() int {
 	firstCounter := make(map[int]int)
 	secondCounter := make(map[int]int)
 
@@ -39,10 +39,10 @@ func (d *day01) part2() {
 		similaritySum += (k * v) * secondCounter[k]
 	}
 
-	fmt.Println("ANSWER2: similaritySum:", similaritySum)
+	return similaritySum
 }
 
-func parse(filename string) *day01 {
+func Parse(filename string) *day01 {
 	lines := utils.SplitLines(filename)
 
 	list1 := make([]int, len(lines))
@@ -51,7 +51,7 @@ func parse(filename string) *day01 {
 	var err error
 
 	for i, line := range lines {
-		numbers := strings.Split(line, "   ")
+		numbers := strings.Fields(line)
 		list1[i], err = strconv.Atoi(numbers[0])
 		if err != nil {
 			panic(err)
@@ -70,7 +70,7 @@ func parse(filename string) *day01 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: diffSum:", d.Part1())
+	fmt.Println("ANSWER2: similaritySum:", d.Part2())
 }

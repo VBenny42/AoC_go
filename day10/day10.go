@@ -96,7 +96,7 @@ func (d *day10) findPathsToZeroAll(c coord) {
 	}
 }
 
-func (d *day10) part1() {
+func (d *day10) Part1() int {
 	for _, nine := range d.ninePositions {
 		visited := make(map[coord]bool)
 		d.findPathsToZeroOne(nine, visited)
@@ -107,10 +107,10 @@ func (d *day10) part1() {
 		score += v
 	}
 
-	fmt.Println("ANSWER1: score:", score)
+	return score
 }
 
-func (d *day10) part2() {
+func (d *day10) Part2() int {
 	for k := range d.trailheads {
 		d.trailheads[k] = 0
 	}
@@ -124,10 +124,10 @@ func (d *day10) part2() {
 		score += v
 	}
 
-	fmt.Println("ANSWER2: score:", score)
+	return score
 }
 
-func parse(filename string) *day10 {
+func Parse(filename string) *day10 {
 	data := utils.SplitLines(filename)
 
 	grid := grid{}
@@ -162,7 +162,7 @@ func parse(filename string) *day10 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: score:", d.Part1())
+	fmt.Println("ANSWER2: score:", d.Part2())
 }

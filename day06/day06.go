@@ -105,7 +105,7 @@ func (d *day06) doesInduceLoop(obstruction coord) bool {
 	}
 }
 
-func (d *day06) part1() {
+func (d *day06) Part1() int {
 	d.grid.markVisited(d.start)
 	distinctPositions := make([]coord, 0)
 	for y, row := range d.grid {
@@ -116,10 +116,11 @@ func (d *day06) part1() {
 		}
 	}
 	d.distinctPositions = distinctPositions
-	fmt.Println("ANSWER1: distinct positions:", len(distinctPositions))
+
+	return len(distinctPositions)
 }
 
-func (d *day06) part2Channels() {
+func (d *day06) Part2() int {
 	sum := 0
 
 	var wg sync.WaitGroup
@@ -144,10 +145,10 @@ func (d *day06) part2Channels() {
 		}
 	}
 
-	fmt.Println("ANSWER2: number of positions that induce a loop:", sum)
+	return sum
 }
 
-func parse(filename string) *day06 {
+func Parse(filename string) *day06 {
 	data := utils.SplitLines(filename)
 
 	grid := grid{}
@@ -173,7 +174,7 @@ func parse(filename string) *day06 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2Channels()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: distinct positions:", d.Part1())
+	fmt.Println("ANSWER2: number of positions that induce a loop:", d.Part2())
 }

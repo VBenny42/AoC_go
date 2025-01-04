@@ -55,15 +55,15 @@ func (d *day11) blinkRecursive(blinks int) int {
 	return sum
 }
 
-func (d *day11) part1() {
-	fmt.Println("ANSWER1: stones after 25 blinks:", d.blinkRecursive(25))
+func (d *day11) Part1() int {
+	return d.blinkRecursive(25)
 }
 
-func (d *day11) part2() {
-	fmt.Println("ANSWER1: stones after 75 blinks:", d.blinkRecursive(75))
+func (d *day11) Part2() int {
+	return d.blinkRecursive(75)
 }
 
-func parse(filename string) *day11 {
+func Parse(filename string) *day11 {
 	file, err := os.Open(filename)
 	if err != nil {
 		panic(err)
@@ -87,7 +87,7 @@ func parse(filename string) *day11 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: stones after 25 blinks:", d.Part1())
+	fmt.Println("ANSWER1: stones after 75 blinks:", d.Part2())
 }

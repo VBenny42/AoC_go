@@ -59,7 +59,7 @@ func isValidWithOneRemoved(report []int) bool {
 	return false
 }
 
-func (d *day02) part1() {
+func (d *day02) Part1() int {
 	validReports := 0
 
 	for _, line := range d.lines {
@@ -68,10 +68,10 @@ func (d *day02) part1() {
 		}
 	}
 
-	fmt.Println("ANSWER1: validReports:", validReports)
+	return validReports
 }
 
-func (d *day02) part2() {
+func (d *day02) Part2() int {
 	validReportsOneRemoved := 0
 
 	for _, line := range d.lines {
@@ -80,10 +80,10 @@ func (d *day02) part2() {
 		}
 	}
 
-	fmt.Println("ANSWER2: validReportsOneRemoved:", validReportsOneRemoved)
+	return validReportsOneRemoved
 }
 
-func parse(filename string) *day02 {
+func Parse(filename string) *day02 {
 	data := utils.SplitLines(filename)
 
 	lines := make([][]int, len(data))
@@ -105,7 +105,9 @@ func parse(filename string) *day02 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+
+	fmt.Println("ANSWER1: validReports:", d.Part1())
+
+	fmt.Println("ANSWER2: validReportsOneRemoved:", d.Part2())
 }
