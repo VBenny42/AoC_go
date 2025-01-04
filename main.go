@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"os"
 	"runtime/pprof"
+	"time"
 
 	"github.com/VBenny42/AoC_go/solutions"
 )
@@ -17,12 +18,21 @@ func main() {
 	all := flag.Bool("all", false, "Run all days")
 	help := flag.Bool("help", false, "Show help")
 	profile := flag.String("profile", "", "Write profile to file")
+	shouldTime := flag.Bool("time", false, "Time the solution")
 
 	flag.Parse()
 
 	if *help {
 		flag.PrintDefaults()
 		return
+	}
+
+	if *shouldTime {
+		start := time.Now()
+		defer func() {
+			parsedTime, _ := time.Parse(time.RFC3339, time.Since(start).String())
+			fmt.Println("Time taken:", parsedTime)
+		}()
 	}
 
 	if *profile != "" {
