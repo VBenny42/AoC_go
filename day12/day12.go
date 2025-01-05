@@ -3,7 +3,7 @@ package day12
 import (
 	"fmt"
 
-	"github.com/VBenny42/AoC_go/utils"
+	"github.com/VBenny42/AoC/2024/golang/utils"
 )
 
 type (

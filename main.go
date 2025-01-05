@@ -9,7 +9,7 @@ import (
 	"runtime/pprof"
 	"time"
 
-	"github.com/VBenny42/AoC_go/solutions"
+	"github.com/VBenny42/AoC/2024/golang/solutions"
 )
 
 func main() {

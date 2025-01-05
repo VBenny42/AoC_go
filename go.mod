@@ -1,4 +1,4 @@
-module github.com/VBenny42/AoC_go
+module github.com/VBenny42/AoC/2024/golang
 
 go 1.23.0
 

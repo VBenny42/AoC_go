@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/Tom-Johnston/mamba/graph"
-	"github.com/VBenny42/AoC_go/utils"
+	"github.com/VBenny42/AoC/2024/golang/utils"
 	"gonum.org/v1/gonum/stat/combin"
 )
 

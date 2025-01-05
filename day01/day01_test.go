@@ -3,7 +3,7 @@ package day01_test
 import (
 	"testing"
 
-	"github.com/VBenny42/AoC_go/day01"
+	"github.com/VBenny42/AoC/2024/golang/day01"
 	"github.com/stretchr/testify/assert"
 )
 

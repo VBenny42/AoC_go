@@ -4,7 +4,7 @@ import (
 	"container/heap"
 	"fmt"
 
-	"github.com/VBenny42/AoC_go/utils"
+	"github.com/VBenny42/AoC/2024/golang/utils"
 )
 
 // TIL runes are just int32, id's were stored as ints, so freeSpace was colliding with id's
