@@ -18,10 +18,7 @@ func (d *day17) executeInstructions() []int {
 	getComboValue := func(operand int) int {
 		{
 			switch operand {
-			case 0:
-			case 1:
-			case 2:
-			case 3:
+			case 0, 1, 2, 3:
 				return operand
 			case 4:
 				return d.registers["A"]
@@ -147,20 +144,20 @@ func (d *day17) findQuine() int {
 	return -1
 }
 
-func (d *day17) part1() {
+func (d *day17) Part1() string {
 	outs := d.executeInstructions()
 	outsStr := make([]string, len(outs))
 	for i, v := range outs {
 		outsStr[i] = fmt.Sprintf("%d", v)
 	}
-	fmt.Println("ANSWER1: outs:", strings.Join(outsStr, ","))
+	return strings.Join(outsStr, ",")
 }
 
-func (d *day17) part2() {
-	fmt.Println("ANSWER2: quineValue:", d.findQuine())
+func (d *day17) Part2() int {
+	return d.findQuine()
 }
 
-func parse(filename string) *day17 {
+func Parse(filename string) *day17 {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error opening file", err)
@@ -197,7 +194,7 @@ func parse(filename string) *day17 {
 }
 
 func Solve(filename string) {
-	d := parse(filename)
-	d.part1()
-	d.part2()
+	d := Parse(filename)
+	fmt.Println("ANSWER1: outs:", d.Part1())
+	fmt.Println("ANSWER2: quineValue:", d.Part2())
 }

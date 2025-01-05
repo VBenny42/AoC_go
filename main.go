@@ -30,8 +30,7 @@ func main() {
 	if *shouldTime {
 		start := time.Now()
 		defer func() {
-			parsedTime, _ := time.Parse(time.RFC3339, time.Since(start).String())
-			fmt.Println("Time taken:", parsedTime)
+			fmt.Println("Time taken:", time.Since(start))
 		}()
 	}
 
