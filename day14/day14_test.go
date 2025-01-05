@@ -8,7 +8,7 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	day := day14.Parse("../inputs/day14/sample-input.txt")
+	day := day14.Parse("../../inputs/day14/sample-input.txt")
 
 	assert.Equal(t, 21, day.Part1())
 }

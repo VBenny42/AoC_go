@@ -8,13 +8,13 @@ import (
 )
 
 func TestPart1(t *testing.T) {
-	day := day04.Parse("../inputs/day04/sample-input.txt")
+	day := day04.Parse("../../inputs/day04/sample-input.txt")
 
 	assert.Equal(t, 18, day.Part1())
 }
 
 func TestPart2(t *testing.T) {
-	day := day04.Parse("../inputs/day04/sample-input.txt")
+	day := day04.Parse("../../inputs/day04/sample-input.txt")
 
 	assert.Equal(t, 9, day.Part2())
 }
